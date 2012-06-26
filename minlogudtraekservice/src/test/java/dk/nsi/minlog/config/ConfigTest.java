@@ -55,7 +55,7 @@ import com.avaje.ebean.springsupport.factory.EbeanServerFactoryBean;
  */
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes={ConfigTest.ApplicationRootConfigTest.class, ConfigTest.WSConfigTest.class})
+@ContextConfiguration(classes={ApplicationRootConfig.class, ConfigTest.DatabaseConfigConfigTest.class, ConfigTest.WSConfigTest.class})
 public class ConfigTest {
 
 	@BeforeClass
@@ -70,7 +70,7 @@ public class ConfigTest {
 	
 	@Configuration
 	@EnableTransactionManagement
-	public static class ApplicationRootConfigTest extends ApplicationRootConfig{
+	public static class DatabaseConfigConfigTest extends DatabaseConfig{
 		
 		@Bean
 		@Override

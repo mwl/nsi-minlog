@@ -3,6 +3,7 @@ package dk.nsi.minlog.config;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -12,7 +13,6 @@ import com.splunk.Service;
 @Configuration
 @ComponentScan({"dk.nsi.minlog.server.dao.splunk"})
 public class SplunkConfig {
-	
 	@Bean
 	public Service splunkService(){
 		Map<String, Object> args = new HashMap<String, Object>();

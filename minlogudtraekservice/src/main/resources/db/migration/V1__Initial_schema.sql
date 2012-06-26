@@ -1,6 +1,6 @@
 CREATE TABLE LogEntry (
   `id` BIGINT NOT NULL AUTO_INCREMENT,
-  `regKode` varchar(20) not null,
+  `regKode` varchar(32) not null,
   `cprNrBorger` varchar(10) not null,
   `bruger` varchar(20),
   `ansvarlig` varchar(20),

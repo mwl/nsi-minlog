@@ -61,13 +61,7 @@ import dk.nsi.minlog.domain.LogEntry;
  * 
  */
 @Configuration
-@EnableScheduling
-@EnableTransactionManagement
-public class ApplicationRootConfig implements TransactionManagementConfigurer {	
-    @Value("${jdbc.url}") String url;
-    @Value("${jdbc.username}") String username;
-    @Value("${jdbc.password}") String password;
-
+public class ApplicationRootConfig {	
     @Bean
     public static PropertyPlaceholderConfigurer configuration() {
         final PropertyPlaceholderConfigurer props = new PropertyPlaceholderConfigurer();
@@ -84,42 +78,5 @@ public class ApplicationRootConfig implements TransactionManagementConfigurer {
         props.setSystemPropertiesMode(PropertyPlaceholderConfigurer.SYSTEM_PROPERTIES_MODE_OVERRIDE);
         
         return props;
-    }
-
-    @Bean
-    public DataSource dataSource() {
-        final DriverManagerDataSource dataSource = new DriverManagerDataSource(
-                url,
-                username,
-                password
-        );
-        dataSource.setDriverClassName("com.mysql.jdbc.Driver");
-        return dataSource;
-    }
-    
-    @Bean
-    public PlatformTransactionManager txManager() {
-        return new DataSourceTransactionManager(dataSource());
-    }
-
-    @Override
-    public PlatformTransactionManager annotationDrivenTransactionManager() {
-        return txManager();
-    }
-
-    @Bean
-    public EbeanServerFactoryBean ebeanServer(DataSource dataSource) throws Exception {
-        final EbeanServerFactoryBean factoryBean = new EbeanServerFactoryBean();
-        final ServerConfig serverConfig = new ServerConfig();        
-        final ArrayList<Class<?>> classes = new ArrayList<Class<?>>();
-        classes.add(LogEntry.class);
-        
-        serverConfig.setName("localhostConfig");
-        serverConfig.setClasses(classes);
-        serverConfig.setDataSource(dataSource);
-        serverConfig.setExternalTransactionManager(new SpringAwareJdbcTransactionManager());
-        serverConfig.setNamingConvention(new com.avaje.ebean.config.MatchingNamingConvention());
-        factoryBean.setServerConfig(serverConfig);
-        return factoryBean;
     }
 }

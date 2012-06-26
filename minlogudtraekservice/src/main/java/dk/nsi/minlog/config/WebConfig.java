@@ -32,7 +32,7 @@ import javax.inject.Inject;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.DependsOn;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 import org.springframework.web.servlet.handler.BeanNameUrlHandlerMapping;
 import org.springframework.ws.server.MessageDispatcher;
@@ -44,7 +44,7 @@ import org.springframework.ws.server.MessageDispatcher;
  *
  */
 @Configuration
-@DependsOn("WSConfig")
+@EnableScheduling
 public class WebConfig extends WebMvcConfigurationSupport {
     @Inject
     ApplicationRootConfig applicationRootConfig;
