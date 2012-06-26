@@ -1,4 +1,3 @@
-USE minlog;
 INSERT INTO `LogEntry` (`regKode`, `cprNrBorger`, `bruger`, `ansvarlig`, `orgUsingID`, `systemName`, `handling`, `sessionId`, `tidspunkt`) VALUES ('1234', '1111111999', 'bruger1', 'ansvarlig1', 'SOR:organisation1', 'system1', 'handling1', 'session1', '2012-01-02 08:00:00');
 INSERT INTO `LogEntry` (`regKode`, `cprNrBorger`, `bruger`, `ansvarlig`, `orgUsingID`, `systemName`, `handling`, `sessionId`, `tidspunkt`) VALUES ('1234', '1111111999', 'bruger2', 'ansvarlig2', 'SOR:organisation2', 'system2', 'handling2', 'session2', '2012-02-01 09:00:00');
 INSERT INTO `LogEntry` (`regKode`, `cprNrBorger`, `bruger`, `ansvarlig`, `orgUsingID`, `systemName`, `handling`, `sessionId`, `tidspunkt`) VALUES ('1234', '1111111999', 'bruger3', 'ansvarlig3', 'SOR:organisation3', 'system3', 'handling3', 'session3', '2011-01-02 10:00:00');

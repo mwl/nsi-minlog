@@ -44,6 +44,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import com.avaje.ebean.EbeanServer;
 import com.avaje.ebean.springsupport.factory.EbeanServerFactoryBean;
+import com.splunk.Service;
 
 /**
  * Simple test to see if spring is correctly setup, and all dependecies are met.
@@ -55,7 +56,7 @@ import com.avaje.ebean.springsupport.factory.EbeanServerFactoryBean;
  */
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes={ApplicationRootConfig.class, ConfigTest.DatabaseConfigConfigTest.class, ConfigTest.WSConfigTest.class})
+@ContextConfiguration(classes={ApplicationRootConfig.class, ConfigTest.DatabaseConfigConfigTest.class, ConfigTest.WSConfigTest.class, ConfigTest.SplunkConfigTest.class})
 public class ConfigTest {
 
 	@BeforeClass
@@ -93,6 +94,16 @@ public class ConfigTest {
 		public EbeanServer ebeanServer(){
 			return mock(EbeanServer.class);
 		}
-
 	}
+	
+	@Configuration
+	public static class SplunkConfigTest extends SplunkConfig{
+		
+		@Override
+		public Service splunkService(){
+			return mock(Service.class);
+		}
+	}
+	
+	
 }

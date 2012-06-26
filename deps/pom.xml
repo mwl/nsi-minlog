@@ -91,5 +91,10 @@
 			<groupId>javax.servlet</groupId>
 			<artifactId>jsp-api</artifactId>
 		</dependency>
+		<dependency>
+  			<groupId>com.splunk</groupId>
+  			<artifactId>splunk-sdk</artifactId>
+  			<version>201206260829</version>
+		</dependency>
 	</dependencies>
 </project>
