@@ -1,5 +1,3 @@
-USE minlog;
-
 CREATE TABLE LogEntry (
   `id` BIGINT NOT NULL AUTO_INCREMENT,
   `regKode` varchar(20) not null,

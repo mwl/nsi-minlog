@@ -108,6 +108,7 @@
 								</configuration>
 							</execution>
 							<!-- stress -->
+                                                        <!--
 							<execution>
 								<id>stresstest</id>
 								<phase>integration-test</phase>
@@ -134,6 +135,7 @@
 									<title>Stress test, 300 threads ramp-up over 50 sec</title>
 								</configuration>
 							</execution>
+                                                        -->
 						</executions>
 					</plugin>
 				</plugins>
