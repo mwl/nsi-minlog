@@ -75,7 +75,7 @@ public class LogEntryDaoEBeanTest {
 	public void findByCpr() throws Exception {			
 		List<LogEntry> entries = createResult();
 		when(ebeanServer.find(LogEntry.class).where().eq("cprNrBorger", "1234").findList()).thenReturn(entries);
-		List<LogEntry> result = logEntryDao.findLogEntriesByCPRAndDates("1234", null, null);
+		List<LogEntry> result = logEntryDao.findByCPRAndDates("1234", null, null);
 		
 		assertTrue(entries.containsAll(result));		
 	}
@@ -89,7 +89,7 @@ public class LogEntryDaoEBeanTest {
 	public void findByCprAndFrom() throws Exception {
 		List<LogEntry> entries = createResult();
 		when(ebeanServer.find(LogEntry.class).where().eq("cprNrBorger", "1234").ge(eq("tidspunkt"), any()).findList()).thenReturn(entries);		
-		List<LogEntry> result = logEntryDao.findLogEntriesByCPRAndDates("1234", DateTime.now(), null);
+		List<LogEntry> result = logEntryDao.findByCPRAndDates("1234", DateTime.now(), null);
 		
 		assertTrue(entries.containsAll(result));		
 	}
@@ -103,7 +103,7 @@ public class LogEntryDaoEBeanTest {
 	public void findByCprAndTo() throws Exception {
 		List<LogEntry> entries = createResult();
 		when(ebeanServer.find(LogEntry.class).where().eq("cprNrBorger", "1234").le(eq("tidspunkt"), any()).findList()).thenReturn(entries);		
-		List<LogEntry> result = logEntryDao.findLogEntriesByCPRAndDates("1234", null, DateTime.now());
+		List<LogEntry> result = logEntryDao.findByCPRAndDates("1234", null, DateTime.now());
 		
 		assertTrue(entries.containsAll(result));		
 	}

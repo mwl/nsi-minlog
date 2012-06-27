@@ -58,7 +58,7 @@ public class MinLogCleanupJobTest {
 	@Test
 	public void removeExecution() {
 		job.cleanup();
-		verify(registreringDao).removeLogEntriesBefore((DateTime)any());
+		verify(registreringDao).removeBefore((DateTime)any());
 	}
 	
 
@@ -74,7 +74,7 @@ public class MinLogCleanupJobTest {
 		         return null;
 		     }
 		})
-		.when(registreringDao).removeLogEntriesBefore((DateTime)any());		
+		.when(registreringDao).removeBefore((DateTime)any());		
 
 		//Start first cleanup in a seperate thread, so we can run second cleanup async.
 		new Thread(){
@@ -86,7 +86,7 @@ public class MinLogCleanupJobTest {
 		job.cleanup();
 
 		//Mockito assumes mocked object methods are only called once
-		verify(registreringDao).removeLogEntriesBefore((DateTime)any());
+		verify(registreringDao).removeBefore((DateTime)any());
 	}
 	
 	/**
@@ -94,7 +94,7 @@ public class MinLogCleanupJobTest {
 	 */
 	@Test
 	public void assumeNotRunningOnException(){
-		doThrow(new RuntimeException()).when(registreringDao).removeLogEntriesBefore((DateTime)any());
+		doThrow(new RuntimeException()).when(registreringDao).removeBefore((DateTime)any());
 		job.cleanup();
 		assertFalse(job.isRunning());
 	}

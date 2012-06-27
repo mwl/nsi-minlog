@@ -103,23 +103,23 @@ public class MinlogudtraekserviceImplTest {
 		}});
 		
 		
-		when(logEntryDao.findLogEntriesByCPRAndDates(eq("1234"), (DateTime)isNull(), (DateTime)isNull())).thenReturn(asList(new LogEntry[]{
+		when(logEntryDao.findByCPRAndDates(eq("1234"), (DateTime)isNull(), (DateTime)isNull())).thenReturn(asList(new LogEntry[]{
 			entries[0], entries[1]
 		}));
 	
-		when(logEntryDao.findLogEntriesByCPRAndDates(eq("1234"), (DateTime)any(), (DateTime)isNull())).thenReturn(asList(new LogEntry[]{
+		when(logEntryDao.findByCPRAndDates(eq("1234"), (DateTime)any(), (DateTime)isNull())).thenReturn(asList(new LogEntry[]{
 				entries[2], entries[3]
 		}));
 
-		when(logEntryDao.findLogEntriesByCPRAndDates(eq("1234"), (DateTime)isNull(), (DateTime)any())).thenReturn(asList(new LogEntry[]{
+		when(logEntryDao.findByCPRAndDates(eq("1234"), (DateTime)isNull(), (DateTime)any())).thenReturn(asList(new LogEntry[]{
 				entries[4], entries[5]
 		}));
 
-		when(logEntryDao.findLogEntriesByCPRAndDates(eq("1234"), (DateTime)notNull(), (DateTime)notNull())).thenReturn(asList(new LogEntry[]{
+		when(logEntryDao.findByCPRAndDates(eq("1234"), (DateTime)notNull(), (DateTime)notNull())).thenReturn(asList(new LogEntry[]{
 				entries[6], entries[7]
 		}));
 		
-		when(logEntryDao.findLogEntriesByCPRAndDates(eq("error"), (DateTime)any(), (DateTime)any())).thenReturn(asList(new LogEntry[]{
+		when(logEntryDao.findByCPRAndDates(eq("error"), (DateTime)any(), (DateTime)any())).thenReturn(asList(new LogEntry[]{
 				error
 		}));
 	}

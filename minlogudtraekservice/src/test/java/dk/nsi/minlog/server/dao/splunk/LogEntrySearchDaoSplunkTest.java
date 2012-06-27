@@ -49,13 +49,13 @@ public class LogEntrySearchDaoSplunkTest {
 	public void findLogEntries() throws Exception {
 		logEntrySearchDao.sleep = 20;
 		
-		
 		Job job = splunkService.getJobs().create((String)any());
 		InputStream stream = ClassLoader.class.getResourceAsStream("/splunk/queryResult.xml");
 		when(job.getResults((Map)any())).thenReturn(stream);
 		when(job.isDone()).thenReturn(false, true);
 		
-		List<LogEntry> result = logEntrySearchDao.findLogEntries();
+		//Mock does not care about dateTime
+		List<LogEntry> result = logEntrySearchDao.findLogEntries(DateTime.now(), DateTime.now());
 		assertTrue(result.size() == 1);
 		
 		LogEntry log = result.get(0);

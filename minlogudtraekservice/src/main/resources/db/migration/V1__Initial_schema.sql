@@ -9,11 +9,15 @@ CREATE TABLE LogEntry (
   `handling` varchar(75),
   `sessionId` varchar(20),
   `tidspunkt` datetime not null,
-  
   PRIMARY KEY (`id`)
 );
 
 CREATE INDEX log_cpr_and_timestamp_index ON LogEntry (`cprNrBorger`, `tidspunkt`) USING BTREE;
+
+CREATE TABLE `status` (
+	`lastUpdated` datetime not null
+);
+
 
 CREATE TABLE `whitelist` (
   `id` BIGINT NOT NULL AUTO_INCREMENT,

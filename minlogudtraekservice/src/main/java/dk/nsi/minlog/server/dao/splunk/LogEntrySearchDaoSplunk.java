@@ -25,9 +25,9 @@ import java.util.UUID;
 public class LogEntrySearchDaoSplunk implements LogEntrySearchDao {
 	static final Logger logger = Logger.getLogger(LogEntrySearchDaoSplunk.class);
 
-	@Value("${minlog.splunk.sleep}") 
+	@Value("${minlog.import.sleep}") 
     public Integer sleep;
-	
+		
 	@Inject
 	Service splunkService;
 
@@ -42,8 +42,8 @@ public class LogEntrySearchDaoSplunk implements LogEntrySearchDao {
 	
 	
 	@Override
-	public List<LogEntry> findLogEntries()  {
-		Job job = splunkService.getJobs().create("search index=main sourcetype=minlog | fields " + FIELDS + " | sort by _indextime asc");
+	public List<LogEntry> findLogEntries(DateTime from, DateTime to)  {	
+		Job job = splunkService.getJobs().create("search index=main sourcetype=minlog  (_indextime > "+ from.getMillis() + " AND _indextime < " + to.getMillis() + " | fields " + FIELDS + " | sort by _indextime asc");
 		
 		//Wait for splunk query to complete
 		logger.debug("Waiting for splunk to complete job");
@@ -54,6 +54,10 @@ public class LogEntrySearchDaoSplunk implements LogEntrySearchDao {
 			} catch (Exception e) {}
 			
 			job.refresh();
+			
+			if(logger.isDebugEnabled()){
+				logger.debug("Checking job: " + (job.getDoneProgress() * 100.0f) + "% done");
+			}
 		}
 		logger.debug("Done waiting for splunk");
 		

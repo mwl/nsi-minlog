@@ -33,6 +33,7 @@ import java.util.List;
 import org.joda.time.DateTime;
 import org.springframework.stereotype.Repository;
 
+import com.avaje.ebean.Ebean;
 import com.avaje.ebean.ExpressionList;
 
 import dk.nsi.minlog.domain.LogEntry;
@@ -45,7 +46,7 @@ public class LogEntryDaoEBean extends SupportDao<LogEntry> implements LogEntryDa
 	}
 
 	@Override
-	public List<LogEntry> findLogEntriesByCPRAndDates(String cpr, DateTime from, DateTime to) {
+	public List<LogEntry> findByCPRAndDates(String cpr, DateTime from, DateTime to) {
 		ExpressionList<LogEntry> query = query().where().eq("cprNrBorger", cpr);
 		if(from != null){
 			query = query.ge("tidspunkt", from);
@@ -58,12 +59,17 @@ public class LogEntryDaoEBean extends SupportDao<LogEntry> implements LogEntryDa
 	}
 	
 	@Override
-	public long removeLogEntriesBefore(DateTime date){
+	public long removeBefore(DateTime date){
 		ExpressionList<LogEntry> query = query().where().le("tidspunkt", date);
 		List<Object> ids = query.findIds();
 		long numberOfIds = ids.size();
 		ebeanServer.delete(LogEntry.class, ids);
 		
 		return numberOfIds;
+	}
+
+	@Override
+	public void save(List<LogEntry> logEntries) {
+		Ebean.save(logEntries);
 	}
 }

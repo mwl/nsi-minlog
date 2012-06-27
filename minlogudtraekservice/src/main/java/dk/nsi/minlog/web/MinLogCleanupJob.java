@@ -49,7 +49,7 @@ public class MinLogCleanupJob {
 	
 	private boolean running;
 		
-	@Scheduled(cron = "${minlogCleanup.cron}")
+	@Scheduled(cron = "${minlog.cleanup.cron}")
 	@Transactional
 	public void cleanup(){
 		// Only one job is allow to run at a time.
@@ -58,7 +58,7 @@ public class MinLogCleanupJob {
 			try{
 				DateTime date = DateTime.now().minusYears(2);	
 				logger.info("Running cleanup job for entries before " + date);
-				long entries = logEntryDao.removeLogEntriesBefore(date);
+				long entries = logEntryDao.removeBefore(date);
 				logger.info("Deleted " + entries + " entries");
 			} catch(Exception e){
 				logger.warn("Failed to execute cleanup job", e);
