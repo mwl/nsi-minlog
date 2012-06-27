@@ -1,13 +1,13 @@
 CREATE TABLE LogEntry (
   `id` BIGINT NOT NULL AUTO_INCREMENT,
-  `regKode` varchar(32) not null,
+  `regKode` varchar(36) not null,
   `cprNrBorger` varchar(10) not null,
   `bruger` varchar(20),
   `ansvarlig` varchar(20),
   `orgUsingID` varchar(25),
   `systemName` varchar(25),
   `handling` varchar(75),
-  `sessionId` varchar(20),
+  `sessionId` varchar(46),
   `tidspunkt` datetime not null,
   PRIMARY KEY (`id`)
 );
@@ -15,7 +15,9 @@ CREATE TABLE LogEntry (
 CREATE INDEX log_cpr_and_timestamp_index ON LogEntry (`cprNrBorger`, `tidspunkt`) USING BTREE;
 
 CREATE TABLE `status` (
-	`lastUpdated` datetime not null
+	`id` int NOT NULL,
+	`lastUpdated` datetime not null,
+	PRIMARY KEY (`id`)
 );
 
 

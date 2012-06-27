@@ -4,8 +4,10 @@ import java.util.ArrayList;
 
 import javax.sql.DataSource;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
@@ -21,7 +23,10 @@ import dk.nsi.minlog.domain.LogEntry;
 
 @Configuration
 @EnableTransactionManagement
+@ComponentScan({"dk.nsi.minlog.dao.ebean"})
 public class DatabaseConfig implements TransactionManagementConfigurer{
+	static final Logger logger = Logger.getLogger(DatabaseConfig.class);
+
     @Value("${jdbc.url}") String url;
     @Value("${jdbc.username}") String username;
     @Value("${jdbc.password}") String password;
@@ -49,6 +54,8 @@ public class DatabaseConfig implements TransactionManagementConfigurer{
 
     @Bean
     public EbeanServerFactoryBean ebeanServer(DataSource dataSource) throws Exception {
+    	logger.debug("Creating ebeanServer with url=" + url + " username=" + username);    		
+    	
         final EbeanServerFactoryBean factoryBean = new EbeanServerFactoryBean();
         final ServerConfig serverConfig = new ServerConfig();        
         final ArrayList<Class<?>> classes = new ArrayList<Class<?>>();

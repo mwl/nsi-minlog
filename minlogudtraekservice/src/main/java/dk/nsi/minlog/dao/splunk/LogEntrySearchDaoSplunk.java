@@ -1,10 +1,11 @@
-package dk.nsi.minlog.server.dao.splunk;
+package dk.nsi.minlog.dao.splunk;
 
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.inject.Inject;
 
@@ -18,9 +19,8 @@ import com.splunk.ResultsReader;
 import com.splunk.ResultsReaderXml;
 import com.splunk.Service;
 
+import dk.nsi.minlog.dao.LogEntrySearchDao;
 import dk.nsi.minlog.domain.LogEntry;
-import dk.nsi.minlog.server.dao.LogEntrySearchDao;
-import java.util.UUID;
 @Repository
 public class LogEntrySearchDaoSplunk implements LogEntrySearchDao {
 	static final Logger logger = Logger.getLogger(LogEntrySearchDaoSplunk.class);
@@ -42,8 +42,12 @@ public class LogEntrySearchDaoSplunk implements LogEntrySearchDao {
 	
 	
 	@Override
-	public List<LogEntry> findLogEntries(DateTime from, DateTime to)  {	
-		Job job = splunkService.getJobs().create("search index=main sourcetype=minlog  (_indextime > "+ from.getMillis() + " AND _indextime < " + to.getMillis() + " | fields " + FIELDS + " | sort by _indextime asc");
+	public List<LogEntry> findLogEntries(DateTime from, DateTime to)  {
+		String query = "search index=main sourcetype=minlog  (_indextime > "+ from.getMillis() + " AND _indextime < " + to.getMillis() + ") | fields " + FIELDS + " | sort by _indextime asc";
+		
+		logger.debug("Splunk query:" + query);
+		
+		Job job = splunkService.getJobs().create(query);
 		
 		//Wait for splunk query to complete
 		logger.debug("Waiting for splunk to complete job");
@@ -59,7 +63,10 @@ public class LogEntrySearchDaoSplunk implements LogEntrySearchDao {
 				logger.debug("Checking job: " + (job.getDoneProgress() * 100.0f) + "% done");
 			}
 		}
-		logger.debug("Done waiting for splunk");
+		if(logger.isDebugEnabled()){
+			logger.debug("Done waiting for splunk, result size:" + job.getResultCount());
+		}
+		
 		
 		List<LogEntry> result = new ArrayList<LogEntry>();
 		 
@@ -81,20 +88,22 @@ public class LogEntrySearchDaoSplunk implements LogEntrySearchDao {
 		return result;
 	}
 	
-	private LogEntry transformMapToEntity(final Map<String, String> map) throws IllegalArgumentException{
+	private static LogEntry transformMapToEntity(final Map<String, String> map) throws IllegalArgumentException{
 		if(logger.isTraceEnabled()){
 			logger.trace("Mapping to entity: \n" + map);			
 		}
-		return new LogEntry() {{
-			setRegKode(UUID.randomUUID().toString());
-			setTidspunkt(DateTime.parse(map.get("EventDateTime")));
-			setCprNrBorger(map.get("PersonCivilRegistrationIdentifier"));
-			setBruger(map.get("UserIdentifier"));
-			setAnsvarlig(map.get("UserIdentifierOnBehalfOf"));
-			setOrgUsingID(map.get("HealthcareProfessionalOrganization"));
-			setSystemName(map.get("SourceSystemIdentifier"));
-			setHandling(map.get("Activity"));
-			setSessionId(map.get("SessionId"));			
-		}};
-	}	
+		LogEntry logEntry = new LogEntry();
+		
+		logEntry.setRegKode(UUID.randomUUID().toString());
+		logEntry.setTidspunkt(DateTime.parse(map.get("EventDateTime")));
+		logEntry.setCprNrBorger(map.get("PersonCivilRegistrationIdentifier"));
+		logEntry.setBruger(map.get("UserIdentifier"));
+		logEntry.setAnsvarlig(map.get("UserIdentifierOnBehalfOf"));
+		logEntry.setOrgUsingID(map.get("HealthcareProfessionalOrganization"));
+		logEntry.setSystemName(map.get("SourceSystemIdentifier"));
+		logEntry.setHandling(map.get("Activity"));
+		logEntry.setSessionId(map.get("SessionId"));
+		logEntry.setLastUpdated(DateTime.parse(map.get("_indextime")));		
+		return logEntry;
+	}		
 }

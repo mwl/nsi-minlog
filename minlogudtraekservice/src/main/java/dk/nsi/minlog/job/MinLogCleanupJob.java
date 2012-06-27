@@ -26,24 +26,48 @@
 * $HeadURL$
 * $Id$
 */
-package dk.nsi.minlog.web;
+package dk.nsi.minlog.job;
 
-import org.springframework.ws.server.endpoint.annotation.Endpoint;
-import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
-import org.springframework.ws.server.endpoint.annotation.RequestPayload;
-import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
-import org.springframework.ws.soap.SoapHeader;
-import org.springframework.ws.soap.addressing.server.annotation.Action;
+import javax.inject.Inject;
 
-import dk.nsi.minlog._2012._05._24.ListLogStatementsRequest;
-import dk.nsi.minlog._2012._05._24.ListLogStatementsResponse;
+import org.apache.log4j.Logger;
+import org.joda.time.DateTime;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
-@Endpoint
-public interface Minlogudtraekservice {
+import dk.nsi.minlog.dao.LogEntryDao;
+/**
+ * A job which cleans the database by deleting entries that are older then 2 years.
+ */	
+@Repository
+public class MinLogCleanupJob {	
+	private static Logger logger = Logger.getLogger(MinLogCleanupJob.class);
 
-    @PayloadRoot(localPart = "ListLogStatementsRequest", namespace = "http://nsi.dk/minlog/2012/05/24/")
-    @Action("http://nsi.dk/minlog/2012/05/24/ListLogStatements")
-    @ResponsePayload
-    ListLogStatementsResponse listLogStatements(@RequestPayload ListLogStatementsRequest request, SoapHeader soapHeader);
-
+	@Inject
+	private LogEntryDao logEntryDao;
+	
+	private boolean running;
+		
+	@Transactional
+	@Scheduled(cron = "${minlog.cleanup.cron}")
+	public void cleanup(){
+		// Only one job is allow to run at a time.
+		if(!running){
+			running = true;
+			try{
+				DateTime date = DateTime.now().minusYears(2);	
+				logger.info("Running cleanup job for entries before " + date);
+				long entries = logEntryDao.removeBefore(date);
+				logger.info("Deleted " + entries + " entries");
+			} catch(Exception e){
+				logger.warn("Failed to execute cleanup job", e);
+			}
+			running = false;
+		}
+	}
+	
+	public boolean isRunning(){
+		return running;
+	}
 }

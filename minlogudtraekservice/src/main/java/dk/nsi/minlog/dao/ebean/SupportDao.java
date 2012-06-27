@@ -26,43 +26,31 @@
 * $HeadURL$
 * $Id$
 */
-package dk.nsi.minlog.server.dao.ebean;
-
-import java.util.HashSet;
-import java.util.Set;
+package dk.nsi.minlog.dao.ebean;
 
 import javax.inject.Inject;
 
-import org.springframework.stereotype.Repository;
-
 import com.avaje.ebean.EbeanServer;
-import com.avaje.ebean.SqlQuery;
-import com.avaje.ebean.SqlRow;
-import com.trifork.dgws.WhitelistChecker;
+import com.avaje.ebean.Query;
 
 /**
- * Helper class for "Den gode webservice spring util" which 
- * provided all the legal cvr numbers from database.
- * 
+ * Support class to help making eBeans operations a bit easier.
  * @author kpi
  *
+ * @param <T> any domain model
  */
 
-@Repository
-public class WhitelistCheckerDefault implements WhitelistChecker {
+public abstract class SupportDao<T> {
     @Inject
     EbeanServer ebeanServer;
-    
-    @Override
-    public Set<String> getLegalCvrNumbers(String whitelist) {
-        SqlQuery query = ebeanServer.createSqlQuery("SELECT legal_cvr FROM whitelist WHERE name = :whitelist");
-        query.setParameter("whitelist", whitelist);
-        final Set<SqlRow> sqlRows = query.findSet(); 
-        		
-        final Set<String> result = new HashSet<String>();
-        for (SqlRow sqlRow : sqlRows) {
-            result.add(sqlRow.getString("legal_cvr"));
-        }
-        return result;
+
+    protected final Class<T> klass;
+
+    protected SupportDao(Class<T> klass) {
+        this.klass = klass;
+    }
+
+    protected Query<T> query() {
+        return ebeanServer.find(klass);
     }
 }

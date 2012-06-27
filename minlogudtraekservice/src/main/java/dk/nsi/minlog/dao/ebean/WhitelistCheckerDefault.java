@@ -26,50 +26,43 @@
 * $HeadURL$
 * $Id$
 */
-package dk.nsi.minlog.server.dao.ebean;
+package dk.nsi.minlog.dao.ebean;
 
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
-import org.joda.time.DateTime;
+import javax.inject.Inject;
+
 import org.springframework.stereotype.Repository;
 
-import com.avaje.ebean.Ebean;
-import com.avaje.ebean.ExpressionList;
+import com.avaje.ebean.EbeanServer;
+import com.avaje.ebean.SqlQuery;
+import com.avaje.ebean.SqlRow;
+import com.trifork.dgws.WhitelistChecker;
 
-import dk.nsi.minlog.domain.LogEntry;
-import dk.nsi.minlog.server.dao.LogEntryDao;
+/**
+ * Helper class for "Den gode webservice spring util" which 
+ * provided all the legal cvr numbers from database.
+ * 
+ * @author kpi
+ *
+ */
 
 @Repository
-public class LogEntryDaoEBean extends SupportDao<LogEntry> implements LogEntryDao {
-	protected LogEntryDaoEBean() {
-		super(LogEntry.class);
-	}
-
-	@Override
-	public List<LogEntry> findByCPRAndDates(String cpr, DateTime from, DateTime to) {
-		ExpressionList<LogEntry> query = query().where().eq("cprNrBorger", cpr);
-		if(from != null){
-			query = query.ge("tidspunkt", from);
-		}
-		
-		if(to != null){
-			query.le("tidspunkt", to);
-		}		
-		return query.findList();
-	}
-	
-	@Override
-	public long removeBefore(DateTime date){
-		ExpressionList<LogEntry> query = query().where().le("tidspunkt", date);
-		List<Object> ids = query.findIds();
-		long numberOfIds = ids.size();
-		ebeanServer.delete(LogEntry.class, ids);
-		
-		return numberOfIds;
-	}
-
-	@Override
-	public void save(List<LogEntry> logEntries) {
-		Ebean.save(logEntries);
-	}
+public class WhitelistCheckerDefault implements WhitelistChecker {
+    @Inject
+    EbeanServer ebeanServer;
+    
+    @Override
+    public Set<String> getLegalCvrNumbers(String whitelist) {
+        SqlQuery query = ebeanServer.createSqlQuery("SELECT legal_cvr FROM whitelist WHERE name = :whitelist");
+        query.setParameter("whitelist", whitelist);
+        final Set<SqlRow> sqlRows = query.findSet(); 
+        		
+        final Set<String> result = new HashSet<String>();
+        for (SqlRow sqlRow : sqlRows) {
+            result.add(sqlRow.getString("legal_cvr"));
+        }
+        return result;
+    }
 }

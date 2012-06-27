@@ -38,6 +38,7 @@ import javax.inject.Inject;
 
 import org.junit.Test;
 
+import dk.nsi.minlog.dao.ebean.WhitelistCheckerDefault;
 import dk.nsi.minlog.test.IntegrationUnitTestSupport;
 
 

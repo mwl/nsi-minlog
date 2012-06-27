@@ -67,7 +67,7 @@ import com.trifork.dgws.sosi.SOSISecurityInterceptor;
  * 
  */
 @Configuration
-@ComponentScan({"dk.nsi.minlog.web", "dk.nsi.minlog.server"})
+@ComponentScan({"dk.nsi.minlog.ws"})
 @ImportResource({"classpath:/dk/trifork/dgws/dgws-protection.xml"})
 @EnableAspectJAutoProxy(proxyTargetClass = true)
 public class WSConfig {

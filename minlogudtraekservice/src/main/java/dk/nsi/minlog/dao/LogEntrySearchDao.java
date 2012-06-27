@@ -1,4 +1,4 @@
-package dk.nsi.minlog.server.dao;
+package dk.nsi.minlog.dao;
 
 import java.util.List;
 

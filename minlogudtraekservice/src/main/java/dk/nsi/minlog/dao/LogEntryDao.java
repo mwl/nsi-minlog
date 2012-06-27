@@ -25,32 +25,43 @@
 *
 * $HeadURL$
 * $Id$
-*/
-package dk.nsi.minlog.server.dao.ebean;
+*/package dk.nsi.minlog.dao;
 
-import javax.inject.Inject;
+import java.util.List;
 
-import com.avaje.ebean.EbeanServer;
-import com.avaje.ebean.Query;
+import org.joda.time.DateTime;
+
+import dk.nsi.minlog.domain.LogEntry;
 
 /**
- * Support class to help making eBeans operations a bit easier.
+ * Dao for logEntry
  * @author kpi
  *
- * @param <T> any domain model
  */
-
-public abstract class SupportDao<T> {
-    @Inject
-    EbeanServer ebeanServer;
-
-    protected final Class<T> klass;
-
-    protected SupportDao(Class<T> klass) {
-        this.klass = klass;
-    }
-
-    protected Query<T> query() {
-        return ebeanServer.find(klass);
-    }
+public interface LogEntryDao {
+	/**
+	 * Finds all the logentries for a given cpr number and a date range.
+	 * 
+	 * @param cpr The cpr number to look logs for.
+	 * @param from Logentries that has a timestamp after from. If from is null, no from range is assumed. 
+	 * @param to Logentries that has a timestamp before to. If to is null, no to range is assumed.
+	 * @return A list of log entries.
+	 */
+	List<LogEntry> findByCPRAndDates(String cpr, DateTime from, DateTime to);
+	
+	
+	/**
+	 * Delete all the log entries before the specified date.
+	 * 
+	 * @param date
+	 * @return The number of deleted log entries;
+	 */	
+	long removeBefore(DateTime date);
+	
+	/**
+	 * Saves the logEntries
+	 * 
+	 * @param logEntries
+	 */	
+	void save(List<LogEntry> logEntries);		
 }

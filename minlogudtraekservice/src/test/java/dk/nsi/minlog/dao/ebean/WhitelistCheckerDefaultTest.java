@@ -1,4 +1,4 @@
-package dk.nsi.minlog.server.dao.ebean;
+package dk.nsi.minlog.dao.ebean;
 
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.*;
@@ -16,6 +16,8 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import com.avaje.ebean.EbeanServer;
 import com.avaje.ebean.SqlRow;
+
+import dk.nsi.minlog.dao.ebean.WhitelistCheckerDefault;
 
 @RunWith(MockitoJUnitRunner.class)
 public class WhitelistCheckerDefaultTest {

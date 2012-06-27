@@ -83,13 +83,12 @@ public class ConfigTest {
 		@Override
 		public EbeanServerFactoryBean ebeanServer(DataSource dataSource) throws Exception {
 			return mock(EbeanServerFactoryBean.class);
-		}
+		}		
 	}
 
 	@Configuration
 	@EnableAspectJAutoProxy(proxyTargetClass = true)
 	public static class WSConfigTest extends WSConfig{
-
 		@Bean
 		public EbeanServer ebeanServer(){
 			return mock(EbeanServer.class);

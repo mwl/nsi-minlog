@@ -1,4 +1,4 @@
-package dk.nsi.minlog.server.dao;
+package dk.nsi.minlog.dao;
 
 import org.joda.time.DateTime;
 

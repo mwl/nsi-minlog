@@ -31,8 +31,8 @@ package dk.nsi.minlog.config;
 import javax.inject.Inject;
 
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 import org.springframework.web.servlet.handler.BeanNameUrlHandlerMapping;
 import org.springframework.ws.server.MessageDispatcher;
@@ -44,14 +44,8 @@ import org.springframework.ws.server.MessageDispatcher;
  *
  */
 @Configuration
-@EnableScheduling
+@ComponentScan({"dk.nsi.minlog.web"})
 public class WebConfig extends WebMvcConfigurationSupport {
-    @Inject
-    ApplicationRootConfig applicationRootConfig;
-
-    @Inject
-    WSConfig wsConfig;
-
     @Inject 
     MessageDispatcher messageDispatcher;
         

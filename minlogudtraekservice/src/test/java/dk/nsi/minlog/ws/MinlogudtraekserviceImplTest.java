@@ -25,7 +25,7 @@
 *
 * $HeadURL$
 * $Id$
-*/package dk.nsi.minlog.web;
+*/package dk.nsi.minlog.ws;
 
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
@@ -45,8 +45,9 @@ import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl
 
 import dk.nsi.minlog._2012._05._24.ListLogStatementsRequest;
 import dk.nsi.minlog._2012._05._24.ListLogStatementsResponse;
+import dk.nsi.minlog.dao.LogEntryDao;
 import dk.nsi.minlog.domain.LogEntry;
-import dk.nsi.minlog.server.dao.LogEntryDao;
+import dk.nsi.minlog.ws.MinlogudtraekserviceImpl;
 
 @RunWith(MockitoJUnitRunner.class)
 @SuppressWarnings("restriction")

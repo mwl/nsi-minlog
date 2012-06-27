@@ -37,6 +37,7 @@ import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.FileSystemResource;
@@ -55,12 +56,15 @@ import com.avaje.ebean.springsupport.txn.SpringAwareJdbcTransactionManager;
 import dk.nsi.minlog.domain.LogEntry;
 
 /**
- * Setup of spring database and transaction handling.
+ * Setup of the application
  *  
  * @author kpi
  * 
  */
 @Configuration
+@EnableScheduling
+@EnableTransactionManagement
+@ComponentScan({"dk.nsi.minlog.job"})
 public class ApplicationRootConfig {	
     @Bean
     public static PropertyPlaceholderConfigurer configuration() {

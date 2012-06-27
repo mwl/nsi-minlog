@@ -26,7 +26,7 @@
 * $HeadURL$
 * $Id$
 */
-package dk.nsi.minlog.server.dao.ebean;
+package dk.nsi.minlog.dao.ebean;
 
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.*;
@@ -45,8 +45,9 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import com.avaje.ebean.EbeanServer;
 
+import dk.nsi.minlog.dao.LogEntryDao;
+import dk.nsi.minlog.dao.ebean.LogEntryDaoEBean;
 import dk.nsi.minlog.domain.LogEntry;
-import dk.nsi.minlog.server.dao.LogEntryDao;
 
 
 

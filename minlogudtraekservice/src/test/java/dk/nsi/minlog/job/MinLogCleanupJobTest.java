@@ -25,7 +25,7 @@
 *
 * $HeadURL$
 * $Id$
-*/package dk.nsi.minlog.web;
+*/package dk.nsi.minlog.job;
 
 import static org.junit.Assert.assertFalse;
 import static org.mockito.Matchers.any;
@@ -40,7 +40,8 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
 
-import dk.nsi.minlog.server.dao.LogEntryDao;
+import dk.nsi.minlog.job.MinLogCleanupJob;
+import dk.nsi.minlog.dao.LogEntryDao;
 
 @RunWith(MockitoJUnitRunner.class)
 public class MinLogCleanupJobTest {
