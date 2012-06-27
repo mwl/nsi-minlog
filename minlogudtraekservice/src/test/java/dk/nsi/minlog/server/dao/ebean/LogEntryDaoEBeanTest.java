@@ -30,6 +30,7 @@ package dk.nsi.minlog.server.dao.ebean;
 
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.*;
+import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,7 +48,7 @@ import com.avaje.ebean.EbeanServer;
 import dk.nsi.minlog.domain.LogEntry;
 import dk.nsi.minlog.server.dao.LogEntryDao;
 
-import static org.junit.Assert.*;
+
 
 @RunWith(MockitoJUnitRunner.class)
 public class LogEntryDaoEBeanTest {
