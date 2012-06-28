@@ -53,6 +53,12 @@ public class StatusDaoEBeanTest {
 	@InjectMocks
 	StatusDaoEBean statusDao = new StatusDaoEBean();
 	
+	/**
+	 * Check if we get the a timestamp from the database
+	 * 
+	 * @throws Exception
+	 */
+	
 	@Test
 	public void fetchingStatus() throws Exception {
 		Timestamp ts = new Timestamp(System.currentTimeMillis());
@@ -64,6 +70,12 @@ public class StatusDaoEBeanTest {
 		
 		assertEquals(expectedDate, statusDao.getLastUpdated());				
 	}
+	
+	/**
+	 * Check if we update the timestamp.
+	 * 
+	 * @throws Exception
+	 */
 	
 	@Test
 	public void setStatus() throws Exception {

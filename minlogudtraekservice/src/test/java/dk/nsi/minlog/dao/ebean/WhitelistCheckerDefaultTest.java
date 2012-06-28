@@ -53,6 +53,11 @@ public class WhitelistCheckerDefaultTest {
 	@Mock(answer=Answers.RETURNS_DEEP_STUBS)
 	EbeanServer ebeanServer;
 	
+	/**
+	 * Check if we can get a cvr from database.
+	 * 
+	 * @throws Exception
+	 */	
 	@Test
 	public void  getLegalCvrNumbers() throws Exception{
 		SqlRow row = mock(SqlRow.class);

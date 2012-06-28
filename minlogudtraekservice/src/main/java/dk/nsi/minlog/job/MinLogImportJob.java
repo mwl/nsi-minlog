@@ -44,7 +44,7 @@ import dk.nsi.minlog.domain.LogEntry;
 
 
 /**
- * Imports log entries into a database.
+ * Imports log entries from splunk into a database.
  *  
  * @author kpi
  *

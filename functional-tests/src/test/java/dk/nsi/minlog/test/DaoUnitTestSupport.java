@@ -36,7 +36,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
@@ -44,8 +43,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.googlecode.flyway.core.Flyway;
 import com.mysql.management.driverlaunched.ServerLauncherSocketFactory;
-
-import dk.nsi.minlog.config.ApplicationRootConfig;
 
 /**
  * Setups the database via TestDBConfig between tests
@@ -74,6 +71,12 @@ public abstract class DaoUnitTestSupport extends AbstractJUnit4SpringContextTest
         }
     }
     
+	
+	/**
+	 * Import all mysql scripts into embedded database
+	 * 
+	 * @throws Exception
+	 */
     @Before
     public void setup() throws Exception {
     	flyway.clean();
