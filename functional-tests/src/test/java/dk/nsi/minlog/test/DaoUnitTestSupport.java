@@ -25,7 +25,7 @@
  */
 package dk.nsi.minlog.test;
 
-import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.*;
 
 import java.io.File;
 
@@ -36,6 +36,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
@@ -44,7 +45,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import com.googlecode.flyway.core.Flyway;
 import com.mysql.management.driverlaunched.ServerLauncherSocketFactory;
 
-import dk.nsi.minlog.config.WSConfig;
+import dk.nsi.minlog.config.ApplicationRootConfig;
 
 /**
  * Setups the database via TestDBConfig between tests
@@ -57,7 +58,7 @@ import dk.nsi.minlog.config.WSConfig;
  */
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {TestDBConfig.class, WSConfig.class, DaoUnitTestSupport.MockContext.class})
+@ContextConfiguration(classes = {TestDBConfig.class, DaoUnitTestSupport.MockContext.class})
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public abstract class DaoUnitTestSupport extends AbstractJUnit4SpringContextTests {	
 	@Inject 

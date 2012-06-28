@@ -25,6 +25,8 @@
  */
 package dk.nsi.minlog.test;
 
+import static java.lang.System.*;
+
 import java.io.File;
 import java.util.ArrayList;
 
@@ -36,6 +38,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
@@ -59,10 +62,28 @@ import dk.nsi.minlog.domain.LogEntry;
 
 @Configuration
 @EnableTransactionManagement
-@ComponentScan("dk.nsi.minlog.server")
+@ComponentScan({"dk.nsi.minlog.dao.ebean"})
 public class TestDBConfig implements TransactionManagementConfigurer {
 	public static String JAVA_IO_TMPDIR = "java.io.tmpdir";
 
+    @Bean
+    public static PropertyPlaceholderConfigurer configuration() {
+        final PropertyPlaceholderConfigurer props = new PropertyPlaceholderConfigurer();
+        props.setLocations(new Resource[]{
+                new ClassPathResource("default.properties"),
+                new FileSystemResource(getProperty("jboss.server.config.url") + "minlog." + getProperty("user.name") + ".properties"),
+                new ClassPathResource("minlog." + getProperty("user.name") + ".properties"),
+                new ClassPathResource("jdbc.default.properties"),
+                new FileSystemResource(getProperty("jboss.server.config.url") + "jdbc." + getProperty("user.name") + ".properties"),
+                new ClassPathResource("jdbc." + getProperty("user.name") + ".properties"),
+                new FileSystemResource(getProperty("user.home") + "/.minlog/passwords.properties")                
+        });
+        props.setIgnoreResourceNotFound(true);
+        props.setSystemPropertiesMode(PropertyPlaceholderConfigurer.SYSTEM_PROPERTIES_MODE_OVERRIDE);
+        
+        return props;
+    }
+	
 	@Bean
 	public File getDatabaseDir(){
     	File ourAppDir = new File(System.getProperty(JAVA_IO_TMPDIR));

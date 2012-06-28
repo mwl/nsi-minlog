@@ -25,7 +25,19 @@
  */
 package dk.nsi.minlog.test;
 
+import static org.mockito.Matchers.*;
+import static org.mockito.Mockito.*;
+
+import java.io.InputStream;
+import java.util.Map;
+
+import org.mockito.Answers;
+import org.mockito.Mock;
+import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.ContextConfiguration;
+
+import com.splunk.Job;
+import com.splunk.Service;
 
 import dk.nsi.minlog.config.WSConfig;
 
@@ -38,4 +50,17 @@ import dk.nsi.minlog.config.WSConfig;
 
 @ContextConfiguration(classes = {WSConfig.class})
 public abstract class IntegrationUnitTestSupport extends DaoUnitTestSupport {
+	@Mock(answer=Answers.RETURNS_DEEP_STUBS)
+	Service service;
+	
+	@Bean
+	@SuppressWarnings("rawtypes")
+	public Service splunkService() throws Exception{
+		Job job = service.getJobs().create((String)any());
+		InputStream stream = ClassLoader.class.getResourceAsStream("/splunk/queryResult.xml");
+		when(job.getResults((Map)any())).thenReturn(stream);
+		when(job.isDone()).thenReturn(false, true);
+		
+		return service;
+	}
 }
