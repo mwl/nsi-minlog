@@ -66,30 +66,44 @@ public class MinLogImportJob {
 	@Value("${minlog.import.delay}")
 	public Integer delay;
 	
+	private boolean running;
+	
 	/**
 	 * Fetches data from Splunk and inserts saves it via LogEntryDao
 	 */	
 	@Scheduled(cron="${minlog.import.cron}")
-	public void startImport(){		
-		DateTime from = getLastUpdated();			
-		DateTime to = DateTime.now().minusMillis(delay);
+	public void startImport(){
 		
-		if(logger.isDebugEnabled()){
-			logger.debug("Fetching data from " + from + " to " + to);			
-		}
-		
-		List<LogEntry> logEntries = logEntrySearchDao.findLogEntries(from, to);
+		if (!running) {
+			running = true;
 
-		if(logEntries.size() > 0){
-			// Assume logEntries are sorted, so latestUpdate will be the last
-			// entry
-			LogEntry last = logEntries.get(logEntries.size() - 1);
+			try {
+				DateTime from = getLastUpdated();
+				DateTime to = DateTime.now().minusMillis(delay);
 
-			if (logger.isDebugEnabled()) {
-				logger.debug("Updating lastUpdated to " + last.getLastUpdated());
+				if (logger.isDebugEnabled()) {
+					logger.debug("Fetching data from " + from + " to " + to);
+				}
+
+				List<LogEntry> logEntries = logEntrySearchDao.findLogEntries(from, to);
+
+				if (logEntries.size() > 0) {
+					// Assume logEntries are sorted, so latestUpdate will be the
+					// last
+					// entry
+					LogEntry last = logEntries.get(logEntries.size() - 1);
+
+					if (logger.isDebugEnabled()) {
+						logger.debug("Updating lastUpdated to " + last.getLastUpdated());
+					}
+
+					updateDatabase(logEntries, last.getLastUpdated());
+				}
+			} catch (Exception e) {
+				logger.error("Import failed, setting running to false for next iteration");
 			}
 
-			updateDatabase(logEntries, last.getLastUpdated());
+			running = false;
 		}
 	}
 	

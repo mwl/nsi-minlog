@@ -1,3 +1,9 @@
+DROP DATABASE IF EXISTS minlogp;
+CREATE DATABASE minlogp;
+USE minlogp;
+
+source ../minlogudtraekservice/src/main/resources/db/migration/V1__Initial_schema.sql
+
 SET FOREIGN_KEY_CHECKS = 0;
 SET UNIQUE_CHECKS = 0;
 SET sql_log_bin = 0; 
@@ -8,12 +14,14 @@ SET sql_log_bin = 1;
 SET UNIQUE_CHECKS = 1;
 SET FOREIGN_KEY_CHECKS = 1;
 
-CREATE INDEX log_cpr_and_timestamp_index ON LogEntry (`cprNrBorger`, `tidspunkt`) USING BTREE;
-
 -- create a table so we can easy filter our dataset
 -- We figure out how many logentries a given CPR has.
 CREATE TABLE occurrences(cprNrBorger varchar(10), occurrence int);
 INSERT INTO occurrences(cprNrBorger, occurrence) SELECT cprNrBorger, COUNT(*) AS c FROM logentry GROUP BY cprNrBorger;
+
+\! rm '/users/kpi/Documents/work/java/nsi-minlog/performance/data/usedCpr_0-30.csv'
+\! rm '/users/kpi/Documents/work/java/nsi-minlog/performance/data/usedCpr_200-300.csv'
+\! rm '/users/kpi/Documents/work/java/nsi-minlog/performance/data/usedCpr_2000-3000.csv'
 
 
 SELECT cprNrBorger FROM occurrences where occurrence < 30 INTO OUTFILE '/users/kpi/Documents/java/nsi-minlog/performance/data/usedCpr_0-30.csv' FIELDS TERMINATED BY ','  ENCLOSED BY '"' LINES TERMINATED BY '\n';
