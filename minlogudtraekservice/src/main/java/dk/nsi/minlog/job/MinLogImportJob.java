@@ -70,7 +70,7 @@ public class MinLogImportJob {
 	 * Fetches data from Splunk and inserts saves it via LogEntryDao
 	 */	
 	@Scheduled(cron="${minlog.import.cron}")
-	public void startImporc(){		
+	public void startImport(){		
 		DateTime from = getLastUpdated();			
 		DateTime to = DateTime.now().minusMillis(delay);
 		
@@ -79,15 +79,18 @@ public class MinLogImportJob {
 		}
 		
 		List<LogEntry> logEntries = logEntrySearchDao.findLogEntries(from, to);
-		
-		//Assume logEntries are sorted, so latestUpdate will be the last entry
-		LogEntry last = logEntries.get(logEntries.size()-1);
 
-		if(logger.isDebugEnabled()){
-			logger.debug("Updating lastUpdated to " + last.getLastUpdated());
+		if(logEntries.size() > 0){
+			// Assume logEntries are sorted, so latestUpdate will be the last
+			// entry
+			LogEntry last = logEntries.get(logEntries.size() - 1);
+
+			if (logger.isDebugEnabled()) {
+				logger.debug("Updating lastUpdated to " + last.getLastUpdated());
+			}
+
+			updateDatabase(logEntries, last.getLastUpdated());
 		}
-		
-		updateDatabase(logEntries, 	last.getLastUpdated());
 	}
 	
 	@Transactional

@@ -54,7 +54,6 @@ import dk.nsi.minlog.dao.splunk.LogEntrySearchDaoSplunk;
 import dk.nsi.minlog.domain.LogEntry;
 
 @RunWith(MockitoJUnitRunner.class)
-@ContextConfiguration(classes = {ApplicationRootConfig.class})
 public class LogEntrySearchDaoSplunkTest {
 
 	@Mock(answer=Answers.RETURNS_DEEP_STUBS)
