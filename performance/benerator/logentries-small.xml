@@ -20,9 +20,9 @@
 		<property name='timeDistribution' value='random' />
 	</bean>
 
-	<generate type="logEntry" count="45000000" pageSize="100000" consumer="out">
+	<generate type="logEntry" count="1000000" pageSize="100000" consumer="out">
 		<attribute name="regKode" type="string" pattern="[0-9]{20}" />
-		<attribute name="cprNrBorger" type="string" source="data/cpr.csv" distribution="cumulated"/>
+		<attribute name="cprNrBorger" type="string" source="data/cpr-small.csv" distribution="cumulated"/>
 		<attribute name="bruger" type="string" pattern="[0-9]{10}" />
 		<attribute name="ansvarlig" type="string" pattern="[0-9]{10}" />
 		<attribute name="orgUsingId" type="string" pattern="(YNUMBER|PNUMBER|SKSCODE|CVRNUMBER|COMMUNALNUMBER|SOR):[0-9]{8}" />

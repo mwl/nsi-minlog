@@ -1,4 +1,3 @@
-/*
 SET FOREIGN_KEY_CHECKS = 0;
 SET UNIQUE_CHECKS = 0;
 SET sql_log_bin = 0; 
@@ -15,7 +14,7 @@ CREATE INDEX log_cpr_and_timestamp_index ON LogEntry (`cprNrBorger`, `tidspunkt`
 -- We figure out how many logentries a given CPR has.
 CREATE TABLE occurrences(cprNrBorger varchar(10), occurrence int);
 INSERT INTO occurrences(cprNrBorger, occurrence) SELECT cprNrBorger, COUNT(*) AS c FROM logentry GROUP BY cprNrBorger;
-*/
+
 
 SELECT cprNrBorger FROM occurrences where occurrence < 30 INTO OUTFILE '/users/kpi/Documents/java/nsi-minlog/performance/data/usedCpr_0-30.csv' FIELDS TERMINATED BY ','  ENCLOSED BY '"' LINES TERMINATED BY '\n';
 SELECT cprNrBorger FROM occurrences where 200 <= occurrence AND occurrence <= 300 INTO OUTFILE '/users/kpi/Documents/java/nsi-minlog/performance/data/usedCpr_200-300.csv' FIELDS TERMINATED BY ','  ENCLOSED BY '"' LINES TERMINATED BY '\n';
