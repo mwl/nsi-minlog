@@ -1,0 +1,49 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<results preview='0'>
+<meta>
+<fieldOrder>
+<field>_indextime</field>
+<field>_time</field>
+<field>EventDateTime</field>
+<field>PersonCivilRegistrationIdentifier</field>
+<field>UserIdentifier</field>
+<field>UserIdentifierOnBehalfOf</field>
+<field>HealthcareProfessionalOrganization</field>
+<field>SourceSystemIdentifier</field>
+<field>Activity</field>
+<field>SessionId</field>
+</fieldOrder>
+</meta>
+	<result offset='0'>
+		<field k='_indextime'>
+			<value><text>1340703334</text></value>
+		</field>
+		<field k='_time'>
+			<value><text>2012-06-18T15:38:10.239+02:00</text></value>
+		</field>
+		<field k='EventDateTime'>
+			<value><text>2012-06-25T13:38:10.109Z</text></value>
+		</field>
+		<field k='PersonCivilRegistrationIdentifier'>
+			<value><text>1111119999</text></value>
+		</field>
+		<field k='UserIdentifier'>
+			<value><text>0101001000</text></value>
+		</field>
+		<field k='UserIdentifierOnBehalfOf'>
+			<value><text>1111001000</text></value>
+		</field>
+		<field k='HealthcareProfessionalOrganization'>
+			<value><text>SOR:12345678</text></value>
+		</field>
+		<field k='SourceSystemIdentifier'>
+			<value><text>System name</text></value>
+		</field>
+		<field k='Activity'>
+			<value><text>Opslag på NPI</text></value>
+		</field>
+		<field k='SessionId'>
+			<value><text>urn:uuid:145d6c9c-b873-47ab-9203-8eaa306013ad</text></value>
+		</field>
+	</result>
+</results>
