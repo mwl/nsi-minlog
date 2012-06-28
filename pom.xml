@@ -24,7 +24,7 @@
 				<groupId>dk.minlog</groupId>
 				<artifactId>minlogudtraekservice</artifactId>
 				<version>${project.version}</version>
-                <classifier>classes</classifier>
+				<classifier>classes</classifier>
 			</dependency>
 			<dependency>
 				<groupId>dk.minlog</groupId>
@@ -235,8 +235,28 @@
 					<target>1.6</target>
 				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>com.mycila.maven-license-plugin</groupId>
+				<artifactId>maven-license-plugin</artifactId>
+				<version>1.9.0</version>
+				<configuration>
+					<header>license.txt</header>
+					<includes>
+						<include>**/src/main/java/**</include>
+						<include>**/src/test/java/**</include>
+					</includes>
+					<excludes>	
+                    	<exclude>**/target/**</exclude>
+                    </excludes>
+                    <strictCheck>true</strictCheck>
+                    <aggregate>true</aggregate>
+				</configuration>
+			</plugin>
+
 		</plugins>
 	</build>
+
+
 	<repositories>
 		<repository>
 			<id>maven2-repository.dev.java.net</id>
