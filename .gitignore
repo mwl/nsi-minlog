@@ -6,6 +6,7 @@ syntax:glob
 .settings
 .project
 .classpath
+.metadata
 target
 /target$
 .DS_Store
