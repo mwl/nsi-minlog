@@ -68,7 +68,7 @@ public class LogEntrySearchDaoSplunk implements LogEntrySearchDao {
 	
 	@Override
 	public List<LogEntry> findLogEntries(DateTime from, DateTime to)  {
-		String query = "search index=main sourcetype=minlog  (_indextime > "+ from.getMillis() + " AND _indextime < " + to.getMillis() + ") | fields " + FIELDS + " | sort by _indextime asc";
+		String query = "search index=main sourcetype=minlog  (_indextime > "+ (from.getMillis()/1000) + " AND _indextime < " + (to.getMillis()/1000) + ") | fields " + FIELDS + " | sort by _indextime asc";
 		
 		logger.debug("Splunk query:" + query);
 		
@@ -128,7 +128,10 @@ public class LogEntrySearchDaoSplunk implements LogEntrySearchDao {
 		logEntry.setSystemName(map.get("SourceSystemIdentifier"));
 		logEntry.setHandling(map.get("Activity"));
 		logEntry.setSessionId(map.get("SessionId"));
-		logEntry.setLastUpdated(DateTime.parse(map.get("_indextime")));		
+		
+		//Notice splunk return in seconds since epoch, datetime uses millis.
+		long indexTime = Long.parseLong(map.get("_indextime")) * 1000;
+		logEntry.setLastUpdated(new DateTime(indexTime));		
 		return logEntry;
 	}		
 }

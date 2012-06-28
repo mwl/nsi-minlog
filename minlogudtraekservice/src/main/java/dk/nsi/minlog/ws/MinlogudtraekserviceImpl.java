@@ -61,101 +61,103 @@ public class MinlogudtraekserviceImpl implements Minlogudtraekservice {
 	@Inject
 	LogEntryDao logEntryDao;
 
-	public MinlogudtraekserviceImpl() {}
+	public MinlogudtraekserviceImpl() {
+	}
 
 	/**
 	 * Webservice which lists all the logentries from the request.
-	 */	
+	 */
 	@Override
-	@Transactional(readOnly=true) //We will never modify, so lets optimize.
-	@Protected(minAuthLevel=3) //aspect which check our request-header and populates the dgws context.
-    @ResponsePayload
+	@Transactional(readOnly = true)
+	// We will never modify, so lets optimize.
+	@Protected(minAuthLevel = 3)
+	// aspect which check our request-header and populates the dgws context.
+	@ResponsePayload
 	public ListLogStatementsResponse listLogStatements(@RequestPayload ListLogStatementsRequest request, SoapHeader soapHeader) {
-		final ListLogStatementsResponse response = new ListLogStatementsResponse();		
+		final ListLogStatementsResponse response = new ListLogStatementsResponse();
 		final Collection<LogEntry> logEntries = logEntryDao.findByCPRAndDates(request.getCprNR(), nullableDateTime(request.getFraDato()), nullableDateTime(request.getTilDato()));
-		
+
 		logger.debug("Found " + logEntries.size() + " log entries for " + request.getCprNR());
-		
-		
-		//Convert all the domain model entries into jaxb and set it on the response.
-		response.getLogEntry().addAll(CollectionUtils.collect(
-				logEntries, 
-				new Transformer<LogEntry, dk.nsi.minlog._2012._05._24.LogEntry>() {
-					@Override
-					public dk.nsi.minlog._2012._05._24.LogEntry transform(LogEntry registering) {
-						return toJaxbType(registering);
-					}
-				}
-		));
-		
-		//Cpr is set for the entire response.
+
+		// Convert all the domain model entries into jaxb and set it on the
+		// response.
+		response.getLogEntry().addAll(CollectionUtils.collect(logEntries, new Transformer<LogEntry, dk.nsi.minlog._2012._05._24.LogEntry>() {
+			@Override
+			public dk.nsi.minlog._2012._05._24.LogEntry transform(LogEntry registering) {
+				return toJaxbType(registering);
+			}
+		}));
+
+		// Cpr is set for the entire response.
 		response.setCprNrBorger(request.getCprNR());
 		return response;
 	}
 
-	
 	/**
 	 * Converts a Logentry domain model to a jaxb type.
-	 *
+	 * 
 	 * @param entry
 	 * @return
 	 */
 	private static dk.nsi.minlog._2012._05._24.LogEntry toJaxbType(final LogEntry entry) {
-				
-		//Compact and clean way to transform, but this codestyle is not oftenly used.
-		//We create a anonymous instance which is return immediately.
-		
-		return new dk.nsi.minlog._2012._05._24.LogEntry() {{
-			setRegKode(entry.getRegKode());
-			setBruger(entry.getBruger());
-			setAnsvarlig(entry.getAnsvarlig());
-			
-			BrugerOrganisation brugerOrganisation = new BrugerOrganisation();
-			brugerOrganisation.setValue(entry.getOrgUsingID());
-			
-			String[] orgUsingID = entry.getOrgUsingID().split(":");			
-			brugerOrganisation.setNameFormat(nfFromString(orgUsingID[0]));
-			brugerOrganisation.setValue(orgUsingID[1]);
-			setBrugerOrganisation(brugerOrganisation);
-			
-			setSystem(entry.getSystemName());
-			setHandling(entry.getHandling());
-			setSessionsId(entry.getSessionId());
-			setTidspunkt(new XMLGregorianCalendarImpl(entry.getTidspunkt().toGregorianCalendar()));
-		}};
+
+		// Compact and clean way to transform, but this codestyle is not oftenly
+		// used.
+		// We create a anonymous instance which is return immediately.
+
+		return new dk.nsi.minlog._2012._05._24.LogEntry() {
+			{
+				setRegKode(entry.getRegKode());
+				setBruger(entry.getBruger());
+				setAnsvarlig(entry.getAnsvarlig());
+
+				BrugerOrganisation brugerOrganisation = new BrugerOrganisation();
+				brugerOrganisation.setValue(entry.getOrgUsingID());
+
+				String[] orgUsingID = entry.getOrgUsingID().split(":");
+				brugerOrganisation.setNameFormat(nfFromString(orgUsingID[0]));
+				brugerOrganisation.setValue(orgUsingID[1]);
+				setBrugerOrganisation(brugerOrganisation);
+
+				setSystem(entry.getSystemName());
+				setHandling(entry.getHandling());
+				setSessionsId(entry.getSessionId());
+				setTidspunkt(new XMLGregorianCalendarImpl(entry.getTidspunkt().toGregorianCalendar()));
+			}
+		};
 	}
-	
+
 	/**
-	 * Convert to DateTime or null if xmlDate is null. 
+	 * Convert to DateTime or null if xmlDate is null.
 	 * 
 	 * @param xmlDate
 	 * @return A datetime from the xmlDate.
 	 */
-    private DateTime nullableDateTime(XMLGregorianCalendar xmlDate) {
-        return xmlDate != null ? new DateTime(xmlDate.toGregorianCalendar()) : null;
-    }    
-    
-    /**
-     * Convert nameformat string to a enum defined by the xsd.
-     * 
-     * @param str
-     * @return the nameformat as a enum.
-     */
-    private static NameFormat nfFromString(String str){
-    	if(str.equals("YNUMBER")){
-    		return NameFormat.MEDCOM_YNUMBER;
-    	} else if(str.equals("PNUMBER")){
-    		return NameFormat.MEDCOM_PNUMBER;
-    	} else if(str.equals("SKSCODE")){
-    		return NameFormat.MEDCOM_SKSCODE;
-    	} else if(str.equals("CVRNUMBER")){
-    		return NameFormat.MEDCOM_CVRNUMBER;
-    	} else if(str.equals("COMMUNALNUMBER")){
-    		return NameFormat.MEDCOM_COMMUNALNUMBER;
-    	} else if(str.equals("SOR")){
-    		return NameFormat.MEDCOM_SOR;
-    	} else {
-    		throw new RuntimeException(str + " is not a valid Nameformat");
-    	}
-    }
+	private DateTime nullableDateTime(XMLGregorianCalendar xmlDate) {
+		return xmlDate != null ? new DateTime(xmlDate.toGregorianCalendar()) : null;
+	}
+
+	/**
+	 * Convert nameformat string to a enum defined by the xsd.
+	 * 
+	 * @param str
+	 * @return the nameformat as a enum.
+	 */
+	private static NameFormat nfFromString(String str) {
+		if (str.equals("YNUMBER")) {
+			return NameFormat.MEDCOM_YNUMBER;
+		} else if (str.equals("PNUMBER")) {
+			return NameFormat.MEDCOM_PNUMBER;
+		} else if (str.equals("SKSCODE")) {
+			return NameFormat.MEDCOM_SKSCODE;
+		} else if (str.equals("CVRNUMBER")) {
+			return NameFormat.MEDCOM_CVRNUMBER;
+		} else if (str.equals("COMMUNALNUMBER")) {
+			return NameFormat.MEDCOM_COMMUNALNUMBER;
+		} else if (str.equals("SOR")) {
+			return NameFormat.MEDCOM_SOR;
+		} else {
+			throw new RuntimeException(str + " is not a valid Nameformat");
+		}
+	}
 }

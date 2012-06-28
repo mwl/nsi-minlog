@@ -6,6 +6,7 @@
 		<groupId>dk.minlog</groupId>
 		<artifactId>minlog</artifactId>
 		<version>1.0-SNAPSHOT</version>
+		<relativePath>..</relativePath>
 	</parent>
 	<artifactId>minlogudtraekservice</artifactId>
 	<packaging>war</packaging>

@@ -70,7 +70,6 @@ public class LogEntrySearchDaoSplunkTest {
 	 * 
 	 * @throws Exception
 	 */
-	/*
 	@Test
 	@SuppressWarnings("rawtypes")
 	public void findLogEntries() throws Exception {
@@ -103,5 +102,4 @@ public class LogEntrySearchDaoSplunkTest {
 		DateTime dt = new DateTime(2012, 6, 25, 13, 38,10, 109,  DateTimeZone.UTC);
 		assertEquals(dt, log.getTidspunkt());
 	}
-	*/
 }
