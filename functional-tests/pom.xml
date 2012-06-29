@@ -16,7 +16,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>dk.minlog</groupId>
-			<artifactId>minlogudtraekservice</artifactId>
+			<artifactId>minlog-ws</artifactId>
 			<classifier>classes</classifier>
 		</dependency>
 		<dependency>

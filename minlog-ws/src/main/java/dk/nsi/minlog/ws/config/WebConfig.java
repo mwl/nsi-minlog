@@ -23,44 +23,34 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package dk.nsi.minlog.test;
+package dk.nsi.minlog.ws.config;
 
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.*;
+import javax.inject.Inject;
 
-import java.io.InputStream;
-import java.util.Map;
-
-import org.mockito.Answers;
-import org.mockito.Mock;
 import org.springframework.context.annotation.Bean;
-import org.springframework.test.context.ContextConfiguration;
-
-import com.splunk.Job;
-import com.splunk.Service;
-
-import dk.nsi.minlog.ws.config.WSConfig;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
+import org.springframework.web.servlet.handler.BeanNameUrlHandlerMapping;
+import org.springframework.ws.server.MessageDispatcher;
 
 /**
- * Webservice part of the setup.
+ * Setup of web context and dispatcher.
  * 
  * @author kpi
  *
  */
-
-@ContextConfiguration(classes = {WSConfig.class})
-public abstract class IntegrationUnitTestSupport extends DaoUnitTestSupport {
-	@Mock(answer=Answers.RETURNS_DEEP_STUBS)
-	Service service;
-	
-	@Bean
-	@SuppressWarnings("rawtypes")
-	public Service splunkService() throws Exception{
-		Job job = service.getJobs().create((String)any());
-		InputStream stream = ClassLoader.class.getResourceAsStream("/splunk/queryResult.xml");
-		when(job.getResults((Map)any())).thenReturn(stream);
-		when(job.isDone()).thenReturn(false, true);
-		
-		return service;
-	}
+@Configuration
+@ComponentScan({"dk.nsi.minlog.ws.web"})
+public class WebConfig extends WebMvcConfigurationSupport {
+    @Inject 
+    MessageDispatcher messageDispatcher;
+        
+    @Override
+    @Bean
+    public BeanNameUrlHandlerMapping beanNameHandlerMapping() {
+        final BeanNameUrlHandlerMapping mapping = super.beanNameHandlerMapping();
+        mapping.setDefaultHandler(messageDispatcher);
+        return mapping;
+    }    
 }

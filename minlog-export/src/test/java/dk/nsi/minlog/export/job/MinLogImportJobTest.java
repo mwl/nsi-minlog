@@ -23,44 +23,56 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package dk.nsi.minlog.test;
+package dk.nsi.minlog.export.job;
 
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.*;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
-import java.io.InputStream;
-import java.util.Map;
+import java.util.Collections;
+import java.util.List;
 
-import org.mockito.Answers;
+import org.joda.time.DateTime;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.context.annotation.Bean;
-import org.springframework.test.context.ContextConfiguration;
+import org.mockito.runners.MockitoJUnitRunner;
 
-import com.splunk.Job;
-import com.splunk.Service;
+import dk.nsi.minlog.export.dao.LogEntryDao;
+import dk.nsi.minlog.export.dao.StatusDao;
+import dk.nsi.minlog.export.dao.splunk.LogEntrySearchDaoSplunk;
+import dk.nsi.minlog.export.domain.LogEntry;
 
-import dk.nsi.minlog.ws.config.WSConfig;
-
-/**
- * Webservice part of the setup.
- * 
- * @author kpi
- *
- */
-
-@ContextConfiguration(classes = {WSConfig.class})
-public abstract class IntegrationUnitTestSupport extends DaoUnitTestSupport {
-	@Mock(answer=Answers.RETURNS_DEEP_STUBS)
-	Service service;
+@RunWith(MockitoJUnitRunner.class)
+public class MinLogImportJobTest {
 	
-	@Bean
-	@SuppressWarnings("rawtypes")
-	public Service splunkService() throws Exception{
-		Job job = service.getJobs().create((String)any());
-		InputStream stream = ClassLoader.class.getResourceAsStream("/splunk/queryResult.xml");
-		when(job.getResults((Map)any())).thenReturn(stream);
-		when(job.isDone()).thenReturn(false, true);
+	@Mock
+	LogEntrySearchDaoSplunk logEntrySearchDao;
+	
+	@Mock
+	LogEntryDao logEntryDao;
+	
+	@Mock
+	StatusDao statusDao;
 		
-		return service;
+	@InjectMocks
+	MinLogImportJob minLogImportJob;
+	
+
+	/**
+	 * Test if import fetches from splunk and into the database
+	 */
+	@Test
+	public void importJob() throws Exception{
+		minLogImportJob.delay = 10;
+
+		List<LogEntry> entries = Collections.singletonList(new LogEntry());
+			
+		when(logEntrySearchDao.findLogEntries((DateTime)any(), (DateTime)any())).thenReturn(entries);
+
+		minLogImportJob.startImport();
+		
+		verify(logEntryDao).save(entries);
 	}
 }

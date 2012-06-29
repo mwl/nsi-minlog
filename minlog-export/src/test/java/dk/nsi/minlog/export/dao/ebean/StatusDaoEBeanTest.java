@@ -23,44 +23,63 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package dk.nsi.minlog.test;
+package dk.nsi.minlog.export.dao.ebean;
 
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.*;
 
-import java.io.InputStream;
-import java.util.Map;
+import java.sql.Timestamp;
 
+import org.joda.time.DateTime;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Answers;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.context.annotation.Bean;
-import org.springframework.test.context.ContextConfiguration;
+import org.mockito.runners.MockitoJUnitRunner;
 
-import com.splunk.Job;
-import com.splunk.Service;
+import com.avaje.ebean.EbeanServer;
+import com.avaje.ebean.SqlRow;
 
-import dk.nsi.minlog.ws.config.WSConfig;
+import dk.nsi.minlog.export.dao.ebean.StatusDaoEBean;
 
-/**
- * Webservice part of the setup.
- * 
- * @author kpi
- *
- */
+import static org.junit.Assert.*;
 
-@ContextConfiguration(classes = {WSConfig.class})
-public abstract class IntegrationUnitTestSupport extends DaoUnitTestSupport {
+@RunWith(MockitoJUnitRunner.class)
+public class StatusDaoEBeanTest {		
 	@Mock(answer=Answers.RETURNS_DEEP_STUBS)
-	Service service;
+	EbeanServer ebeanServer;
 	
-	@Bean
-	@SuppressWarnings("rawtypes")
-	public Service splunkService() throws Exception{
-		Job job = service.getJobs().create((String)any());
-		InputStream stream = ClassLoader.class.getResourceAsStream("/splunk/queryResult.xml");
-		when(job.getResults((Map)any())).thenReturn(stream);
-		when(job.isDone()).thenReturn(false, true);
+	@InjectMocks
+	StatusDaoEBean statusDao = new StatusDaoEBean();
+	
+	/**
+	 * Check if we get the a timestamp from the database
+	 * 
+	 * @throws Exception
+	 */
+	
+	@Test
+	public void fetchingStatus() throws Exception {
+		Timestamp ts = new Timestamp(System.currentTimeMillis());
+		SqlRow row = mock(SqlRow.class); 
+		when(row.getTimestamp("lastUpdated")).thenReturn(ts);
+		when(ebeanServer.createSqlQuery((String)any()).findUnique()).thenReturn(row);
 		
-		return service;
+		DateTime expectedDate = new DateTime(ts.getTime());
+		
+		assertEquals(expectedDate, statusDao.getLastUpdated());				
+	}
+	
+	/**
+	 * Check if we update the timestamp.
+	 * 
+	 * @throws Exception
+	 */
+	
+	@Test
+	public void setStatus() throws Exception {
+		statusDao.setLastUpdated(DateTime.now());
+		verify(ebeanServer).createSqlUpdate((String)any());
 	}
 }

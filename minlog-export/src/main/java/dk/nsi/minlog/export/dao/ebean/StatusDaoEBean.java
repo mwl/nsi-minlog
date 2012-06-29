@@ -23,44 +23,46 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package dk.nsi.minlog.test;
+package dk.nsi.minlog.export.dao.ebean;
 
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.*;
+import java.sql.Timestamp;
 
-import java.io.InputStream;
-import java.util.Map;
+import javax.inject.Inject;
 
-import org.mockito.Answers;
-import org.mockito.Mock;
-import org.springframework.context.annotation.Bean;
-import org.springframework.test.context.ContextConfiguration;
+import org.joda.time.DateTime;
+import org.springframework.stereotype.Repository;
 
-import com.splunk.Job;
-import com.splunk.Service;
+import com.avaje.ebean.EbeanServer;
+import com.avaje.ebean.SqlRow;
+import com.avaje.ebean.SqlUpdate;
 
-import dk.nsi.minlog.ws.config.WSConfig;
+import dk.nsi.minlog.export.dao.StatusDao;
 
-/**
- * Webservice part of the setup.
- * 
- * @author kpi
- *
- */
-
-@ContextConfiguration(classes = {WSConfig.class})
-public abstract class IntegrationUnitTestSupport extends DaoUnitTestSupport {
-	@Mock(answer=Answers.RETURNS_DEEP_STUBS)
-	Service service;
+@Repository
+public class StatusDaoEBean implements StatusDao{
+	@Inject
+	EbeanServer ebeanServer;
 	
-	@Bean
-	@SuppressWarnings("rawtypes")
-	public Service splunkService() throws Exception{
-		Job job = service.getJobs().create((String)any());
-		InputStream stream = ClassLoader.class.getResourceAsStream("/splunk/queryResult.xml");
-		when(job.getResults((Map)any())).thenReturn(stream);
-		when(job.isDone()).thenReturn(false, true);
+	
+	@Override
+	public DateTime getLastUpdated() {
+		SqlRow row = ebeanServer.createSqlQuery("SELECT * FROM status LIMIT 1").findUnique();
+		//If there does not exist a from date, we just pick the earliest possible date
+		if(row != null){
+	        Timestamp date = row.getTimestamp("lastUpdated");
+	        return new DateTime(date.getTime());
+		} else {
+			return new DateTime(0);
+		}		
+	}
+
+	@Override
+	public void setLastUpdated(DateTime lastUpdated) {
+		//Create an entry or update existing
+		SqlUpdate update = ebeanServer.createSqlUpdate("INSERT INTO status (id, lastUpdated) VALUES(1, :lastUpdated) ON DUPLICATE KEY UPDATE lastUpdated = :lastUpdated");
+		update.setParameter("lastUpdated", new Timestamp(lastUpdated.getMillis()));
 		
-		return service;
+		update.execute();
+		
 	}
 }

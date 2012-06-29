@@ -23,44 +23,34 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package dk.nsi.minlog.test;
+package dk.nsi.minlog.ws.dao.ebean;
 
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.*;
+import java.util.List;
 
-import java.io.InputStream;
-import java.util.Map;
+import org.joda.time.DateTime;
+import org.springframework.stereotype.Repository;
 
-import org.mockito.Answers;
-import org.mockito.Mock;
-import org.springframework.context.annotation.Bean;
-import org.springframework.test.context.ContextConfiguration;
+import com.avaje.ebean.ExpressionList;
 
-import com.splunk.Job;
-import com.splunk.Service;
+import dk.nsi.minlog.ws.dao.LogEntryDao;
+import dk.nsi.minlog.ws.domain.LogEntry;
 
-import dk.nsi.minlog.ws.config.WSConfig;
+@Repository
+public class LogEntryDaoEBean extends SupportDao<LogEntry> implements LogEntryDao {
+	protected LogEntryDaoEBean() {
+		super(LogEntry.class);
+	}
 
-/**
- * Webservice part of the setup.
- * 
- * @author kpi
- *
- */
-
-@ContextConfiguration(classes = {WSConfig.class})
-public abstract class IntegrationUnitTestSupport extends DaoUnitTestSupport {
-	@Mock(answer=Answers.RETURNS_DEEP_STUBS)
-	Service service;
-	
-	@Bean
-	@SuppressWarnings("rawtypes")
-	public Service splunkService() throws Exception{
-		Job job = service.getJobs().create((String)any());
-		InputStream stream = ClassLoader.class.getResourceAsStream("/splunk/queryResult.xml");
-		when(job.getResults((Map)any())).thenReturn(stream);
-		when(job.isDone()).thenReturn(false, true);
+	@Override
+	public List<LogEntry> findByCPRAndDates(String cpr, DateTime from, DateTime to) {
+		ExpressionList<LogEntry> query = query().where().eq("cprNrBorger", cpr);
+		if(from != null){
+			query = query.ge("tidspunkt", from);
+		}
 		
-		return service;
+		if(to != null){
+			query.le("tidspunkt", to);
+		}		
+		return query.findList();
 	}
 }

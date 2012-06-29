@@ -23,44 +23,48 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package dk.nsi.minlog.test;
+package dk.nsi.minlog.export.job;
 
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.*;
+import javax.inject.Inject;
 
-import java.io.InputStream;
-import java.util.Map;
+import org.apache.log4j.Logger;
+import org.joda.time.DateTime;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
-import org.mockito.Answers;
-import org.mockito.Mock;
-import org.springframework.context.annotation.Bean;
-import org.springframework.test.context.ContextConfiguration;
-
-import com.splunk.Job;
-import com.splunk.Service;
-
-import dk.nsi.minlog.ws.config.WSConfig;
-
+import dk.nsi.minlog.export.dao.LogEntryDao;
 /**
- * Webservice part of the setup.
- * 
- * @author kpi
- *
- */
+ * A job which cleans the database by deleting entries that are older then 2 years.
+ */	
+@Repository
+public class MinLogCleanupJob {	
+	private static Logger logger = Logger.getLogger(MinLogCleanupJob.class);
 
-@ContextConfiguration(classes = {WSConfig.class})
-public abstract class IntegrationUnitTestSupport extends DaoUnitTestSupport {
-	@Mock(answer=Answers.RETURNS_DEEP_STUBS)
-	Service service;
+	@Inject
+	private LogEntryDao logEntryDao;
 	
-	@Bean
-	@SuppressWarnings("rawtypes")
-	public Service splunkService() throws Exception{
-		Job job = service.getJobs().create((String)any());
-		InputStream stream = ClassLoader.class.getResourceAsStream("/splunk/queryResult.xml");
-		when(job.getResults((Map)any())).thenReturn(stream);
-		when(job.isDone()).thenReturn(false, true);
+	private boolean running;
 		
-		return service;
+	@Transactional
+	@Scheduled(cron = "${minlog.cleanup.cron}")
+	public void cleanup(){
+		// Only one job is allow to run at a time.
+		if(!running){
+			running = true;
+			try{
+				DateTime date = DateTime.now().minusYears(2);	
+				logger.info("Running cleanup job for entries before " + date);
+				long entries = logEntryDao.removeBefore(date);
+				logger.info("Deleted " + entries + " entries");
+			} catch(Exception e){
+				logger.warn("Failed to execute cleanup job", e);
+			}
+			running = false;
+		}
+	}
+	
+	public boolean isRunning(){
+		return running;
 	}
 }

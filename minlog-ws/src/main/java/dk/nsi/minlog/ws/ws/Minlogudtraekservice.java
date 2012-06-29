@@ -23,44 +23,24 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package dk.nsi.minlog.test;
+package dk.nsi.minlog.ws.ws;
 
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.*;
+import org.springframework.ws.server.endpoint.annotation.Endpoint;
+import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
+import org.springframework.ws.server.endpoint.annotation.RequestPayload;
+import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
+import org.springframework.ws.soap.SoapHeader;
+import org.springframework.ws.soap.addressing.server.annotation.Action;
 
-import java.io.InputStream;
-import java.util.Map;
+import dk.nsi.minlog._2012._05._24.ListLogStatementsRequest;
+import dk.nsi.minlog._2012._05._24.ListLogStatementsResponse;
 
-import org.mockito.Answers;
-import org.mockito.Mock;
-import org.springframework.context.annotation.Bean;
-import org.springframework.test.context.ContextConfiguration;
+@Endpoint
+public interface Minlogudtraekservice {
 
-import com.splunk.Job;
-import com.splunk.Service;
+    @PayloadRoot(localPart = "ListLogStatementsRequest", namespace = "http://nsi.dk/minlog/2012/05/24/")
+    @Action("http://nsi.dk/minlog/2012/05/24/ListLogStatements")
+    @ResponsePayload
+    ListLogStatementsResponse listLogStatements(@RequestPayload ListLogStatementsRequest request, SoapHeader soapHeader);
 
-import dk.nsi.minlog.ws.config.WSConfig;
-
-/**
- * Webservice part of the setup.
- * 
- * @author kpi
- *
- */
-
-@ContextConfiguration(classes = {WSConfig.class})
-public abstract class IntegrationUnitTestSupport extends DaoUnitTestSupport {
-	@Mock(answer=Answers.RETURNS_DEEP_STUBS)
-	Service service;
-	
-	@Bean
-	@SuppressWarnings("rawtypes")
-	public Service splunkService() throws Exception{
-		Job job = service.getJobs().create((String)any());
-		InputStream stream = ClassLoader.class.getResourceAsStream("/splunk/queryResult.xml");
-		when(job.getResults((Map)any())).thenReturn(stream);
-		when(job.isDone()).thenReturn(false, true);
-		
-		return service;
-	}
 }

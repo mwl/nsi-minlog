@@ -23,44 +23,43 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package dk.nsi.minlog.test;
+package dk.nsi.minlog.ws.dao.ebean;
 
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.*;
+import java.util.HashSet;
+import java.util.Set;
 
-import java.io.InputStream;
-import java.util.Map;
+import javax.inject.Inject;
 
-import org.mockito.Answers;
-import org.mockito.Mock;
-import org.springframework.context.annotation.Bean;
-import org.springframework.test.context.ContextConfiguration;
+import org.springframework.stereotype.Repository;
 
-import com.splunk.Job;
-import com.splunk.Service;
-
-import dk.nsi.minlog.ws.config.WSConfig;
+import com.avaje.ebean.EbeanServer;
+import com.avaje.ebean.SqlQuery;
+import com.avaje.ebean.SqlRow;
+import com.trifork.dgws.WhitelistChecker;
 
 /**
- * Webservice part of the setup.
+ * Helper class for "Den gode webservice spring util" which 
+ * provided all the legal cvr numbers from database.
  * 
  * @author kpi
  *
  */
 
-@ContextConfiguration(classes = {WSConfig.class})
-public abstract class IntegrationUnitTestSupport extends DaoUnitTestSupport {
-	@Mock(answer=Answers.RETURNS_DEEP_STUBS)
-	Service service;
-	
-	@Bean
-	@SuppressWarnings("rawtypes")
-	public Service splunkService() throws Exception{
-		Job job = service.getJobs().create((String)any());
-		InputStream stream = ClassLoader.class.getResourceAsStream("/splunk/queryResult.xml");
-		when(job.getResults((Map)any())).thenReturn(stream);
-		when(job.isDone()).thenReturn(false, true);
-		
-		return service;
-	}
+@Repository
+public class WhitelistCheckerDefault implements WhitelistChecker {
+    @Inject
+    EbeanServer ebeanServer;
+    
+    @Override
+    public Set<String> getLegalCvrNumbers(String whitelist) {
+        SqlQuery query = ebeanServer.createSqlQuery("SELECT legal_cvr FROM whitelist WHERE name = :whitelist");
+        query.setParameter("whitelist", whitelist);
+        final Set<SqlRow> sqlRows = query.findSet(); 
+        		
+        final Set<String> result = new HashSet<String>();
+        for (SqlRow sqlRow : sqlRows) {
+            result.add(sqlRow.getString("legal_cvr"));
+        }
+        return result;
+    }
 }

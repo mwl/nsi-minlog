@@ -23,44 +23,27 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package dk.nsi.minlog.test;
+package dk.nsi.minlog.ws.dao;
 
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.*;
+import java.util.List;
 
-import java.io.InputStream;
-import java.util.Map;
+import org.joda.time.DateTime;
 
-import org.mockito.Answers;
-import org.mockito.Mock;
-import org.springframework.context.annotation.Bean;
-import org.springframework.test.context.ContextConfiguration;
-
-import com.splunk.Job;
-import com.splunk.Service;
-
-import dk.nsi.minlog.ws.config.WSConfig;
+import dk.nsi.minlog.ws.domain.LogEntry;
 
 /**
- * Webservice part of the setup.
- * 
+ * Dao for logEntry
  * @author kpi
  *
  */
-
-@ContextConfiguration(classes = {WSConfig.class})
-public abstract class IntegrationUnitTestSupport extends DaoUnitTestSupport {
-	@Mock(answer=Answers.RETURNS_DEEP_STUBS)
-	Service service;
-	
-	@Bean
-	@SuppressWarnings("rawtypes")
-	public Service splunkService() throws Exception{
-		Job job = service.getJobs().create((String)any());
-		InputStream stream = ClassLoader.class.getResourceAsStream("/splunk/queryResult.xml");
-		when(job.getResults((Map)any())).thenReturn(stream);
-		when(job.isDone()).thenReturn(false, true);
-		
-		return service;
-	}
+public interface LogEntryDao {
+	/**
+	 * Finds all the logentries for a given cpr number and a date range.
+	 * 
+	 * @param cpr The cpr number to look logs for.
+	 * @param from Logentries that has a timestamp after from. If from is null, no from range is assumed. 
+	 * @param to Logentries that has a timestamp before to. If to is null, no to range is assumed.
+	 * @return A list of log entries.
+	 */
+	List<LogEntry> findByCPRAndDates(String cpr, DateTime from, DateTime to);
 }

@@ -23,44 +23,31 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package dk.nsi.minlog.test;
+package dk.nsi.minlog.ws.dao.ebean;
 
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.*;
+import javax.inject.Inject;
 
-import java.io.InputStream;
-import java.util.Map;
-
-import org.mockito.Answers;
-import org.mockito.Mock;
-import org.springframework.context.annotation.Bean;
-import org.springframework.test.context.ContextConfiguration;
-
-import com.splunk.Job;
-import com.splunk.Service;
-
-import dk.nsi.minlog.ws.config.WSConfig;
+import com.avaje.ebean.EbeanServer;
+import com.avaje.ebean.Query;
 
 /**
- * Webservice part of the setup.
- * 
+ * Support class to help making eBeans operations a bit easier.
  * @author kpi
  *
+ * @param <T> any domain model
  */
 
-@ContextConfiguration(classes = {WSConfig.class})
-public abstract class IntegrationUnitTestSupport extends DaoUnitTestSupport {
-	@Mock(answer=Answers.RETURNS_DEEP_STUBS)
-	Service service;
-	
-	@Bean
-	@SuppressWarnings("rawtypes")
-	public Service splunkService() throws Exception{
-		Job job = service.getJobs().create((String)any());
-		InputStream stream = ClassLoader.class.getResourceAsStream("/splunk/queryResult.xml");
-		when(job.getResults((Map)any())).thenReturn(stream);
-		when(job.isDone()).thenReturn(false, true);
-		
-		return service;
-	}
+public abstract class SupportDao<T> {
+    @Inject
+    EbeanServer ebeanServer;
+
+    protected final Class<T> klass;
+
+    protected SupportDao(Class<T> klass) {
+        this.klass = klass;
+    }
+
+    protected Query<T> query() {
+        return ebeanServer.find(klass);
+    }
 }

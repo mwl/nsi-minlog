@@ -23,44 +23,48 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package dk.nsi.minlog.test;
+package dk.nsi.minlog.ws.dao.ebean;
 
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.*;
 
-import java.io.InputStream;
-import java.util.Map;
+import java.util.Collections;
+import java.util.Set;
 
+import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Answers;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.context.annotation.Bean;
-import org.springframework.test.context.ContextConfiguration;
+import org.mockito.runners.MockitoJUnitRunner;
 
-import com.splunk.Job;
-import com.splunk.Service;
+import com.avaje.ebean.EbeanServer;
+import com.avaje.ebean.SqlRow;
 
-import dk.nsi.minlog.ws.config.WSConfig;
+import dk.nsi.minlog.ws.dao.ebean.WhitelistCheckerDefault;
 
-/**
- * Webservice part of the setup.
- * 
- * @author kpi
- *
- */
+@RunWith(MockitoJUnitRunner.class)
+public class WhitelistCheckerDefaultTest {
 
-@ContextConfiguration(classes = {WSConfig.class})
-public abstract class IntegrationUnitTestSupport extends DaoUnitTestSupport {
-	@Mock(answer=Answers.RETURNS_DEEP_STUBS)
-	Service service;
+	@InjectMocks
+	WhitelistCheckerDefault whitelistCheckerDefault = new WhitelistCheckerDefault();
 	
-	@Bean
-	@SuppressWarnings("rawtypes")
-	public Service splunkService() throws Exception{
-		Job job = service.getJobs().create((String)any());
-		InputStream stream = ClassLoader.class.getResourceAsStream("/splunk/queryResult.xml");
-		when(job.getResults((Map)any())).thenReturn(stream);
-		when(job.isDone()).thenReturn(false, true);
-		
-		return service;
+	@Mock(answer=Answers.RETURNS_DEEP_STUBS)
+	EbeanServer ebeanServer;
+	
+	/**
+	 * Check if we can get a cvr from database.
+	 * 
+	 * @throws Exception
+	 */	
+	@Test
+	public void  getLegalCvrNumbers() throws Exception{
+		SqlRow row = mock(SqlRow.class);
+		when(row.getString("legal_cvr")).thenReturn("result");		
+		when(ebeanServer.createSqlQuery((String)any()).findSet()).thenReturn(Collections.singleton(row));
+				
+		Set<String> results = whitelistCheckerDefault.getLegalCvrNumbers("test");
+		assertTrue(results.contains("result"));		
 	}
 }

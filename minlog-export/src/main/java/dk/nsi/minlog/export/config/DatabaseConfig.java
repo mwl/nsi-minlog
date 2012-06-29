@@ -23,23 +23,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package dk.nsi.minlog.test;
+package dk.nsi.minlog.export.config;
 
-import static java.lang.System.getProperty;
-
-import java.io.File;
 import java.util.ArrayList;
 
 import javax.sql.DataSource;
 
-import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.DependsOn;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.FileSystemResource;
-import org.springframework.core.io.Resource;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -49,60 +43,28 @@ import org.springframework.transaction.annotation.TransactionManagementConfigure
 import com.avaje.ebean.config.ServerConfig;
 import com.avaje.ebean.springsupport.factory.EbeanServerFactoryBean;
 import com.avaje.ebean.springsupport.txn.SpringAwareJdbcTransactionManager;
-import com.googlecode.flyway.core.Flyway;
 
-import dk.nsi.minlog.ws.domain.LogEntry;
-
-/**
- * Creates an embedded mysql server process to run tests against.
- * 
- * @author kpi
- *
- */
+import dk.nsi.minlog.export.domain.LogEntry;
 
 @Configuration
 @EnableTransactionManagement
-@ComponentScan({"dk.nsi.minlog.ws.dao.ebean"})
-public class TestDBConfig implements TransactionManagementConfigurer {
-	public static String JAVA_IO_TMPDIR = "java.io.tmpdir";
+@ComponentScan({"dk.nsi.minlog.dao.ebean"})
+public class DatabaseConfig implements TransactionManagementConfigurer{
+	static final Logger logger = Logger.getLogger(DatabaseConfig.class);
 
-    @Bean
-    public static PropertyPlaceholderConfigurer configuration() {
-        final PropertyPlaceholderConfigurer props = new PropertyPlaceholderConfigurer();
-        props.setLocations(new Resource[]{
-                new ClassPathResource("default.properties"),
-                new FileSystemResource(getProperty("jboss.server.config.url") + "minlog." + getProperty("user.name") + ".properties"),
-                new ClassPathResource("minlog." + getProperty("user.name") + ".properties"),
-                new ClassPathResource("jdbc.default.properties"),
-                new FileSystemResource(getProperty("jboss.server.config.url") + "jdbc." + getProperty("user.name") + ".properties"),
-                new ClassPathResource("jdbc." + getProperty("user.name") + ".properties"),
-                new FileSystemResource(getProperty("user.home") + "/.minlog/passwords.properties")                
-        });
-        props.setIgnoreResourceNotFound(true);
-        props.setSystemPropertiesMode(PropertyPlaceholderConfigurer.SYSTEM_PROPERTIES_MODE_OVERRIDE);
-        
-        return props;
-    }
-	
-	@Bean
-	public File getDatabaseDir(){
-    	File ourAppDir = new File(System.getProperty(JAVA_IO_TMPDIR));
-    	File databaseDir = new File(ourAppDir, "min-log-test");
-
-    	return databaseDir;
-	}
+    @Value("${jdbc.url}") String url;
+    @Value("${jdbc.username}") String username;
+    @Value("${jdbc.password}") String password;
 
     @Bean
     public DataSource dataSource() {
         final DriverManagerDataSource dataSource = new DriverManagerDataSource(
-        		"jdbc:mysql:mxj:///minlog" + 
-        		"?server.basedir=" + getDatabaseDir() +
-        		"&createDatabaseIfNotExist=true",
-                "root",
-                ""
+                url,
+                username,
+                password
         );
         dataSource.setDriverClassName("com.mysql.jdbc.Driver");
-        return dataSource;        
+        return dataSource;
     }
     
     @Bean
@@ -114,28 +76,21 @@ public class TestDBConfig implements TransactionManagementConfigurer {
     public PlatformTransactionManager annotationDrivenTransactionManager() {
         return txManager();
     }
-    
+
     @Bean
-    public Flyway flyway(DataSource dataSource){  	
-        Flyway flyway = new Flyway();
-        flyway.setDisableInitCheck(true);
-        flyway.setDataSource(dataSource);       
-        return flyway;
-    }
-       
-    @Bean
-    @DependsOn("flyway")
     public EbeanServerFactoryBean ebeanServer(DataSource dataSource) throws Exception {
+    	logger.debug("Creating ebeanServer with url=" + url + " username=" + username);    		
+    	
         final EbeanServerFactoryBean factoryBean = new EbeanServerFactoryBean();
-        final ServerConfig serverConfig = new ServerConfig();
+        final ServerConfig serverConfig = new ServerConfig();        
         final ArrayList<Class<?>> classes = new ArrayList<Class<?>>();
         classes.add(LogEntry.class);
         
         serverConfig.setName("localhostConfig");
         serverConfig.setClasses(classes);
         serverConfig.setDataSource(dataSource);
-        serverConfig.setNamingConvention(new com.avaje.ebean.config.MatchingNamingConvention());
         serverConfig.setExternalTransactionManager(new SpringAwareJdbcTransactionManager());
+        serverConfig.setNamingConvention(new com.avaje.ebean.config.MatchingNamingConvention());
         factoryBean.setServerConfig(serverConfig);
         return factoryBean;
     }

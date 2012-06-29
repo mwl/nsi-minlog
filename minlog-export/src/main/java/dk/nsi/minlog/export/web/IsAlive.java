@@ -23,44 +23,54 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package dk.nsi.minlog.test;
+package dk.nsi.minlog.export.web;
 
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.*;
+import java.io.IOException;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
-import java.io.InputStream;
-import java.util.Map;
+import javax.inject.Inject;
+import javax.servlet.jsp.JspWriter;
+import javax.sql.DataSource;
 
-import org.mockito.Answers;
-import org.mockito.Mock;
-import org.springframework.context.annotation.Bean;
-import org.springframework.test.context.ContextConfiguration;
+import org.springframework.stereotype.Repository;
 
-import com.splunk.Job;
 import com.splunk.Service;
 
-import dk.nsi.minlog.ws.config.WSConfig;
 
 /**
- * Webservice part of the setup.
+ * Service to check if everything is okey.
  * 
  * @author kpi
  *
  */
+@Repository("isAlive")
+public class IsAlive {
+    
+	@Inject
+	DataSource dataSource;
 
-@ContextConfiguration(classes = {WSConfig.class})
-public abstract class IntegrationUnitTestSupport extends DaoUnitTestSupport {
-	@Mock(answer=Answers.RETURNS_DEEP_STUBS)
-	Service service;
+	@Inject
+	Service splunkService;
 	
-	@Bean
-	@SuppressWarnings("rawtypes")
-	public Service splunkService() throws Exception{
-		Job job = service.getJobs().create((String)any());
-		InputStream stream = ClassLoader.class.getResourceAsStream("/splunk/queryResult.xml");
-		when(job.getResults((Map)any())).thenReturn(stream);
-		when(job.isDone()).thenReturn(false, true);
+	/**
+	 * Checks if we have access to the database by doing a simple query.
+	 * 
+	 * @param out Writes out the result to this jsp writer.
+	 * @throws IOException
+	 * @throws SQLException
+	 */
+	public void checkAll(JspWriter out) throws Exception{
+		out.println("Checking database connection");		
+		ResultSet rs = dataSource.getConnection().createStatement().executeQuery("SELECT 1");		
+		if(!rs.next() || rs.getInt(1) != 1){
+			throw new RuntimeException("Invalid result from database");
+		}		
+		out.println("Checking database connection - OK");
 		
-		return service;
+		out.println("Checking splunk connection");		
+		splunkService.getInfo();
+		
+		out.println("Checking splunk connection - OK");
 	}
 }

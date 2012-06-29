@@ -23,44 +23,32 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package dk.nsi.minlog.test;
+package dk.nsi.minlog.export.dao;
 
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.*;
+import java.util.List;
 
-import java.io.InputStream;
-import java.util.Map;
+import org.joda.time.DateTime;
 
-import org.mockito.Answers;
-import org.mockito.Mock;
-import org.springframework.context.annotation.Bean;
-import org.springframework.test.context.ContextConfiguration;
-
-import com.splunk.Job;
-import com.splunk.Service;
-
-import dk.nsi.minlog.ws.config.WSConfig;
+import dk.nsi.minlog.export.domain.LogEntry;
 
 /**
- * Webservice part of the setup.
- * 
+ * Dao for logEntry
  * @author kpi
  *
  */
-
-@ContextConfiguration(classes = {WSConfig.class})
-public abstract class IntegrationUnitTestSupport extends DaoUnitTestSupport {
-	@Mock(answer=Answers.RETURNS_DEEP_STUBS)
-	Service service;
+public interface LogEntryDao {
+	/**
+	 * Delete all the log entries before the specified date.
+	 * 
+	 * @param date
+	 * @return The number of deleted log entries;
+	 */	
+	long removeBefore(DateTime date);
 	
-	@Bean
-	@SuppressWarnings("rawtypes")
-	public Service splunkService() throws Exception{
-		Job job = service.getJobs().create((String)any());
-		InputStream stream = ClassLoader.class.getResourceAsStream("/splunk/queryResult.xml");
-		when(job.getResults((Map)any())).thenReturn(stream);
-		when(job.isDone()).thenReturn(false, true);
-		
-		return service;
-	}
+	/**
+	 * Saves the logEntries
+	 * 
+	 * @param logEntries
+	 */	
+	void save(List<LogEntry> logEntries);		
 }

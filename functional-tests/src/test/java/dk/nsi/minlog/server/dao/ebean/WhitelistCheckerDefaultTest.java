@@ -35,8 +35,8 @@ import javax.inject.Inject;
 
 import org.junit.Test;
 
-import dk.nsi.minlog.dao.ebean.WhitelistCheckerDefault;
 import dk.nsi.minlog.test.IntegrationUnitTestSupport;
+import dk.nsi.minlog.ws.dao.ebean.WhitelistCheckerDefault;
 
 
 public class WhitelistCheckerDefaultTest extends IntegrationUnitTestSupport {
