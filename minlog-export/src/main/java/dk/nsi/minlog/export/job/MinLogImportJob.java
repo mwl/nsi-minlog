@@ -123,5 +123,14 @@ public class MinLogImportJob {
 	private void updateDatabase(List<LogEntry> logEntries, DateTime to){
 		logEntryDao.save(logEntries);
 		statusDao.setLastUpdated(to);
-	}	
+	}
+	
+	/**
+	 * Check if import is running
+	 * 
+	 * @return true if is running.
+	 */
+	public boolean isRunning() {
+		return running;
+	}
 }

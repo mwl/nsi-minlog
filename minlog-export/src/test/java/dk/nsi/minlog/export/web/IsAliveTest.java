@@ -23,74 +23,67 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package dk.nsi.minlog.export.job;
+package dk.nsi.minlog.export.web;
 
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.junit.Assert.*;
 
-import java.util.Collections;
-import java.util.List;
+import java.io.IOException;
+import java.sql.SQLException;
 
-import org.joda.time.DateTime;
+import javax.servlet.jsp.JspWriter;
+import javax.sql.DataSource;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Answers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import dk.nsi.minlog.export.dao.LogEntryDao;
-import dk.nsi.minlog.export.dao.StatusDao;
-import dk.nsi.minlog.export.dao.splunk.LogEntrySearchDaoSplunk;
-import dk.nsi.minlog.export.domain.LogEntry;
+import com.splunk.Service;
 
 @RunWith(MockitoJUnitRunner.class)
-public class MinLogImportJobTest {
+public class IsAliveTest {
+	@Mock(answer=Answers.RETURNS_DEEP_STUBS)
+	DataSource dataSource;
 	
 	@Mock
-	LogEntrySearchDaoSplunk logEntrySearchDao;
+	Service splunkService;
 	
 	@Mock
-	LogEntryDao logEntryDao;
+	JspWriter out;
 	
-	@Mock
-	StatusDao statusDao;
-		
 	@InjectMocks
-	MinLogImportJob minLogImportJob;
+	IsAlive isAlive;
 	
-
 	/**
-	 * Test if import fetches from splunk and into the database
-	 */
+	 * Check if we can hit the datasource without the code blowing up
+	 * 
+	 * @throws SQLException
+	 * @throws IOException
+	 */	
 	@Test
-	public void importJob() throws Exception{
-		minLogImportJob.delay = 10;
+	public void checkAll() throws Exception, Exception {
+		when(dataSource.getConnection().createStatement().executeQuery("SELECT 1").next()).thenReturn(true);
+		when(dataSource.getConnection().createStatement().executeQuery("SELECT 1").getInt(1)).thenReturn(1);
+				
+		isAlive.checkAll(out);
 
-		List<LogEntry> entries = Collections.singletonList(new LogEntry());
-			
-		when(logEntrySearchDao.findLogEntries((DateTime)any(), (DateTime)any())).thenReturn(entries);
-
-		minLogImportJob.startImport();
-		
-		verify(logEntryDao).save(entries);
+		//Success if we do not get an exception
 	}
 	
 	/**
-	 * Test if import can recover from exception
+	 * Check if the we get an exception, when the datasource does not answer correctly
+	 * 
+	 * @throws SQLException
+	 * @throws IOException
 	 */
-	@Test
-	public void importJobFail() throws Exception{
-		minLogImportJob.delay = 10;
-
-		when(logEntrySearchDao.findLogEntries((DateTime)any(), (DateTime)any())).thenThrow(new RuntimeException());
-
-		minLogImportJob.startImport();
-		
-		Thread.sleep(minLogImportJob.delay * 10);
-		
-		assertFalse(minLogImportJob.isRunning());
-		
+	@Test(expected=RuntimeException.class)
+	public void checkAllFail() throws Exception {
+		when(dataSource.getConnection().createStatement().executeQuery("SELECT 1").next()).thenReturn(false);
+		when(dataSource.getConnection().createStatement().executeQuery("SELECT 1").getInt(1)).thenReturn(1);
+				
+		isAlive.checkAll(out);
 	}
+
 }

@@ -23,74 +23,55 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package dk.nsi.minlog.export.job;
+package dk.nsi.minlog.export.dao.ebean;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.junit.Assert.*;
 
-import java.util.Collections;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.joda.time.DateTime;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Answers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import com.avaje.ebean.EbeanServer;
+
 import dk.nsi.minlog.export.dao.LogEntryDao;
-import dk.nsi.minlog.export.dao.StatusDao;
-import dk.nsi.minlog.export.dao.splunk.LogEntrySearchDaoSplunk;
 import dk.nsi.minlog.export.domain.LogEntry;
 
 @RunWith(MockitoJUnitRunner.class)
-public class MinLogImportJobTest {
-	
-	@Mock
-	LogEntrySearchDaoSplunk logEntrySearchDao;
-	
-	@Mock
-	LogEntryDao logEntryDao;
-	
-	@Mock
-	StatusDao statusDao;
-		
+public class LogEntryDaoEBeanTest {
+
 	@InjectMocks
-	MinLogImportJob minLogImportJob;
+	LogEntryDao logEntryDao = new LogEntryDaoEBean();
 	
-
-	/**
-	 * Test if import fetches from splunk and into the database
-	 */
-	@Test
-	public void importJob() throws Exception{
-		minLogImportJob.delay = 10;
-
-		List<LogEntry> entries = Collections.singletonList(new LogEntry());
-			
-		when(logEntrySearchDao.findLogEntries((DateTime)any(), (DateTime)any())).thenReturn(entries);
-
-		minLogImportJob.startImport();
+	@Mock(answer=Answers.RETURNS_DEEP_STUBS)
+	EbeanServer ebeanServer;
 		
-		verify(logEntryDao).save(entries);
+	public List<LogEntry> createResult(){
+		List<LogEntry> entries = new ArrayList<LogEntry>();
+		entries.add(new LogEntry());
+		entries.add(new LogEntry());
+		entries.add(new LogEntry());		
+		return entries;
 	}
-	
+
 	/**
-	 * Test if import can recover from exception
-	 */
+	 * Test if we can delete data from the dao
+	 * 
+	 * @throws Exception
+	 */	
+	@SuppressWarnings("unchecked")
 	@Test
-	public void importJobFail() throws Exception{
-		minLogImportJob.delay = 10;
-
-		when(logEntrySearchDao.findLogEntries((DateTime)any(), (DateTime)any())).thenThrow(new RuntimeException());
-
-		minLogImportJob.startImport();
+	public void removeBefore() throws Exception{		
+		logEntryDao.removeBefore(DateTime.now());
 		
-		Thread.sleep(minLogImportJob.delay * 10);
-		
-		assertFalse(minLogImportJob.isRunning());
-		
+		verify(ebeanServer).delete((Class<LogEntry>)any(), (Collection<LogEntry>)any());
 	}
 }
