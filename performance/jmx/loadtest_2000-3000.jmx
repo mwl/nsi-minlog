@@ -77,7 +77,7 @@
           </WebServiceSampler>
           <hashTree>
             <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="CPR" enabled="true">
-              <stringProp name="filename">data/usedCpr.csv</stringProp>
+              <stringProp name="filename">../data/usedCpr_2000-3000.csv</stringProp>
               <stringProp name="fileEncoding"></stringProp>
               <stringProp name="variableNames">cpr</stringProp>
               <stringProp name="delimiter">,</stringProp>

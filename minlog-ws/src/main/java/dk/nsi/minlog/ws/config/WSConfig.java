@@ -75,14 +75,14 @@ public class WSConfig {
     public WsdlDefinition serviceDefinition() {
         final DefaultWsdl11Definition bean = new DefaultWsdl11Definition();
         bean.setSchema(schema1XsdSchema());
-        bean.setPortTypeName("Minlogudtraekservice");
-        bean.setLocationUri("http://localhost:8080/minlog/");
+        bean.setPortTypeName("Minlog");
+        bean.setLocationUri("http://localhost:8080/minlog-ws/");
         return bean;
     }
 
     @Bean
     public SimpleXsdSchema schema1XsdSchema() {
-        return new SimpleXsdSchema(new ClassPathResource("schema/minlogudtraekservice.xsd"));
+        return new SimpleXsdSchema(new ClassPathResource("schema/minlog.xsd"));
     }
     
     @Bean
@@ -138,7 +138,7 @@ public class WSConfig {
     public EndpointInterceptor payloadValidationEndpointInterceptor() {
         final PayloadValidatingInterceptor interceptor = new PayloadValidatingInterceptor();
         interceptor.setSchemas(new Resource[]{
-                new ClassPathResource("schema/minlogudtraekservice.xsd"),
+                new ClassPathResource("schema/minlog.xsd"),
         });
         interceptor.setValidateRequest(true);
         interceptor.setValidateResponse(false);

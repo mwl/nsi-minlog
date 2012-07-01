@@ -240,57 +240,18 @@ Test coverage sitet kan findes under *doc/coverage.zip*
 
 Performance tests
 -----------------
-Sitet med performances-tests ligger under *doc/performance.zip*
-
-
-
-Dette afsnit skal skrives om når vi har lavet nye performance tests.
-Der findes *benerator* scripts til at generere tilfældige testdata. Se senere beskrivelse om generering af testdata.
-
-
-
-Det er ikke lykkes at få serveren til at gå ned, men i tests med et forventet throughput på 1000 request/sec bliver der kun laves 200 requests/sec.
-Dette kan skyldes setup'et eller en indstilling i OS'et.
-
-
-
-
-
-
-
-
-
-Denne endurence tests laver 2 requests/sec og er lavet over 2 timer. Grafen spiker kl 12:00,  
-dette kan skyldes at computeren har et job der bliver eksekveret kl 12:00.  
-Derved får garbage collectoren ikke lov til at lave løbende collection.  
-Ved 1GB heap rydder garbage collectoren fint op.  
-
-<img src="https://github.com/trifork/nsi-minlog/raw/master/doc/endurence.png" width=600>
 
 ### Opsætning
 Disse tests er kørt på 
     
     2GHz Intel core i7
     8 GB ram
-    Harddisk med 5400 rpm
+    SSD harddisk (Intel 520)
 
-Opsætning af mysql:
-
-    innodb_data_file_path = ibdata1:10M:autoextend
-    innodb_flush_log_at_trx_commit = 1
-    innodb_lock_wait_timeout = 50
-    innodb_additional_mem_pool_size=512M
-    innodb_buffer_pool_size=4096M
-    innodb_log_buffer_size=128M
-    innodb_log_file_size=1024M
-    read_buffer_size= 128M
-    sort_buffer_size=4096M
-    tmp_table_size= 1024M
+Opsætningen af mysql kan ses i *performane/my.cnf*
 
 Det antages at databasen *minlog* er oprettet med adgang fra brugeren *minlog*
 og at der er minlog er blevet sat op med *sosi.production = 0*
-
-
 
 ### Generering af testdata
 Til at genere test-data med er *Benerator* blevet brugt <http://databene.org/databene-benerator>
@@ -298,11 +259,25 @@ Til at genere test-data med er *Benerator* blevet brugt <http://databene.org/dat
 Alle kommandoer skal køres fra */performance*.
 
 Først køres *benerator benerator/cpr.xml* som laver CPR numre i *data/cpr.csv*
-Der generes 50.000 tilfældige CPR numre.
+Der generes 100.000 tilfældige CPR numre.
 
 Dernæst *benerator benerator/logentries.xml* som laver 450.000.000 logs i filen *data/logentries.csv*
 
-*import.sql* tilpasses så den absolute sti passer.
+*import.sql* tilpasses så den absolute sti passer og køres.
+
 **NB!** Dette skal gøres for at slippe for *local* parameteren til *load data* som laver en kopi af csv filen!.
 
-**NB!** Det kan være en fordel at slette alle indekser pånær primary key inden kørsel. Dette optimere indsættelsen væsenligt.
+**NB!** *import.sql* slette alle indekser pånær primary key inden kørsel og oprette disse efter importeringen. Dette optimere indsættelsen væsenligt.
+
+Der er observeret divserse *jdbc* fejl under stresstesten. Men der er ingen fejl i under selve kørelsen og applikationen svare fint efter kørelsen.
+
+
+### Resultater 
+Sitet med performances-tests ligger under *doc/performance.zip*
+
+Denne endurence tests laver 2 requests/sec og er lavet over 2 timer. Grafen spiker kl 12:00,  
+dette kan skyldes at computeren har et job der bliver eksekveret kl 12:00.  
+Derved får garbage collectoren ikke lov til at lave løbende collection.  
+Ved 1GB heap rydder garbage collectoren fint op.  
+
+<img src="https://github.com/trifork/nsi-minlog/raw/master/doc/endurence.png" width=600>

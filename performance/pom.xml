@@ -80,20 +80,20 @@
 							<jMeterRemoteLocation>http://apache.mirrors.webname.dk/jmeter/binaries/apache-jmeter-2.6.zip</jMeterRemoteLocation>
 						</configuration>
 						<executions>
-							<!-- load -->
+<!--
 							<execution>
-								<id>loadtest</id>
+								<id>loadtest_0-30</id>
 								<phase>integration-test</phase>
 								<goals>
-									<goal>jmeter</goal>
+								  <goal>jmeter</goal>
 								</goals>
 								<configuration>
-									<dataid>loadtest-data</dataid>
-									<input>${basedir}/loadtest.jmx</input>
+									<dataid>loadtest_0-30-data</dataid>
+									<input>${basedir}/jmx/loadtest_0-30.jmx</input>
 								</configuration>
 							</execution>
 							<execution>
-								<id>loadtest-report</id>
+								<id>loadtest_0-30-report</id>
 								<phase>site</phase>
 								<goals>
 									<goal>report</goal>
@@ -101,14 +101,65 @@
 								<configuration>
 									<showgc>false</showgc>
 									<showpercentile99>true</showpercentile99>
-									<reportid>loadtest-report</reportid>
-									<dataid>loadtest-data</dataid>
-									<description>Load test</description>
-									<title>Load test, 5 req/sec peak requirement</title>
+									<reportid>loadtest_0-30-report</reportid>
+									<dataid>loadtest_0-30-data</dataid>
+									<description>Load test 0-30 logentry</description>
+									<title>Load test 0-30 logentry responses, 5 req/sec peak requirement</title>
 								</configuration>
 							</execution>
-							<!-- stress -->
-                                                        <!--
+							<execution>
+								<id>loadtest_200-300</id>
+								<phase>integration-test</phase>
+								<goals>
+								  <goal>jmeter</goal>
+								</goals>
+								<configuration>
+									<dataid>loadtest_200-300-data</dataid>
+									<input>${basedir}/jmx/loadtest_200-300.jmx</input>
+								</configuration>
+							</execution>
+							<execution>
+								<id>loadtest_200-300-report</id>
+								<phase>site</phase>
+								<goals>
+									<goal>report</goal>
+								</goals>
+								<configuration>
+									<showgc>false</showgc>
+									<showpercentile99>true</showpercentile99>
+									<reportid>loadtest_200-300-report</reportid>
+									<dataid>loadtest_200-300-data</dataid>
+									<description>Load test 200-300 logentry</description>
+									<title>Load test 200-300 logentry responses, 5 req/sec peak requirement</title>
+								</configuration>
+							</execution>
+							<execution>
+								<id>loadtest_2000-3000</id>
+								<phase>integration-test</phase>
+								<goals>
+								  <goal>jmeter</goal>
+								</goals>
+								<configuration>
+									<dataid>loadtest_2000-3000-data</dataid>
+									<input>${basedir}/jmx/loadtest_2000-3000.jmx</input>
+								</configuration>
+							</execution>
+							<execution>
+								<id>loadtest_2000-3000-report</id>
+								<phase>site</phase>
+								<goals>
+									<goal>report</goal>
+								</goals>
+								<configuration>
+									<showgc>true</showgc>
+									<showpercentile99>true</showpercentile99>
+									<reportid>loadtest_2000-3000-report</reportid>
+									<dataid>loadtest_2000-3000-data</dataid>
+									<description>Load test 2000-3000 logentry</description>
+									<title>Load test 2000-3000 logentry responses, 5 req/sec peak requirement</title>
+								</configuration>
+							</execution>
+-->
 							<execution>
 								<id>stresstest</id>
 								<phase>integration-test</phase>
@@ -117,7 +168,7 @@
 								</goals>
 								<configuration>
 									<dataid>stresstest-data</dataid>
-									<input>${basedir}/stresstest.jmx</input>
+									<input>${basedir}/jmx/stresstest.jmx</input>
 								</configuration>
 							</execution>
 							<execution>
@@ -127,15 +178,14 @@
 									<goal>report</goal>
 								</goals>
 								<configuration>
-									<showgc>false</showgc>
+									<showgc>true</showgc>
 									<showpercentile99>true</showpercentile99>
 									<reportid>stresstest-report</reportid>
 									<dataid>stresstest-data</dataid>
 									<description>Stress test</description>
-									<title>Stress test, 300 threads ramp-up over 50 sec</title>
+									<title>Stress test, 200 threads ramp-up over 50 sec</title>
 								</configuration>
 							</execution>
-                                                        -->
 						</executions>
 					</plugin>
 				</plugins>

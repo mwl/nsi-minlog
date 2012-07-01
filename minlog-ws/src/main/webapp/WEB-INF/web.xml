@@ -14,7 +14,7 @@
   </context-param>
   <context-param>
     <param-name>contextConfigLocation</param-name>
-    <param-value>dk.nsi.minlog.config</param-value>
+    <param-value>dk.nsi.minlog.ws.config</param-value>
   </context-param>
   <listener>
     <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
@@ -37,11 +37,11 @@
     <filter-class>dk.sdsd.nsp.slalog.ws.SLALoggingServletFilter</filter-class>
     <init-param>
       <param-name>appName</param-name>
-      <param-value>Minlog</param-value>
+      <param-value>Minlog Webservice</param-value>
     </init-param>
     <init-param>
       <param-name>shortAppName</param-name>
-      <param-value>minlog</param-value>
+      <param-value>minlog-ws</param-value>
     </init-param>
   </filter>
   <filter-mapping>
