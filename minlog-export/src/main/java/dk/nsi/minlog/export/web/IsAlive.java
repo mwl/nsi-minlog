@@ -26,8 +26,10 @@
 package dk.nsi.minlog.export.web;
 
 import java.io.IOException;
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 import javax.inject.Inject;
 import javax.servlet.jsp.JspWriter;
@@ -61,11 +63,18 @@ public class IsAlive {
 	 * @throws SQLException
 	 */
 	public void checkAll(JspWriter out) throws Exception{
-		out.println("Checking database connection");		
-		ResultSet rs = dataSource.getConnection().createStatement().executeQuery("SELECT 1");		
+		out.println("Checking database connection");
+		Connection connection = dataSource.getConnection();
+		Statement statement = connection.createStatement();
+		ResultSet rs = statement.executeQuery("SELECT 1");		
 		if(!rs.next() || rs.getInt(1) != 1){
 			throw new RuntimeException("Invalid result from database");
 		}		
+		statement.close();
+		connection.close();
+		
+		out.println("Check database connection - OK");
+		
 		out.println("Checking database connection - OK");
 		
 		out.println("Checking splunk connection");		
