@@ -240,7 +240,6 @@ Test coverage sitet kan findes under *doc/coverage.zip*
 
 Performance tests
 -----------------
-
 ### Opsætning
 Disse tests er kørt på 
     
@@ -250,13 +249,22 @@ Disse tests er kørt på
 
 Opsætningen af mysql kan ses i *performane/my.cnf*
 
+JVM er opsat med følgende parameter:
+*-Xms256m -Xmx1024m -XX:MaxPermSize=1024m -Dsun.rmi.dgc.client.gcInterval=3600000 -Dsun.rmi.dgc.server.gcInterval=3600000*
+
 Det antages at databasen *minlog* er oprettet med adgang fra brugeren *minlog*
 og at der er minlog er blevet sat op med *sosi.production = 0*
+
+Testene kan køres ved *mvn clean install site -P performancetest* Fra *performance*
+
+Dog skal *mysql-connector-java-5.1.18.jar* kopieres ind i *jmeter/lib* efter jmeter bliver hentet første gang, 
+som sker *mvn clean install ...* kommandoen køres første gang. Ellers vil stress testen med insert load ikke fungere korrekt.
+
 
 ### Generering af testdata
 Til at genere test-data med er *Benerator* blevet brugt <http://databene.org/databene-benerator>
 
-Alle kommandoer skal køres fra */performance*.
+Alle kommandoer skal køres fra *performance*.
 
 Først køres *benerator benerator/cpr.xml* som laver CPR numre i *data/cpr.csv*
 Der generes 100.000 tilfældige CPR numre.

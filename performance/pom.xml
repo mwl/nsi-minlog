@@ -16,7 +16,7 @@
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>chronos-maven-plugin</artifactId>
 				<configuration>
-					<heap>768m</heap>
+					<heap>2048m</heap>
 					<permsize>256m</permsize>
 					<sysproperties>
 						<property>
@@ -65,7 +65,7 @@
 						<artifactId>chronos-maven-plugin</artifactId>
 						<version>1.0-SNAPSHOT</version>
 						<configuration>
-							<heap>768m</heap>
+							<heap>2048m</heap>
 							<permsize>256m</permsize>
 							<sysproperties>
 								<property>
@@ -80,7 +80,6 @@
 							<jMeterRemoteLocation>http://apache.mirrors.webname.dk/jmeter/binaries/apache-jmeter-2.6.zip</jMeterRemoteLocation>
 						</configuration>
 						<executions>
-<!--
 							<execution>
 								<id>loadtest_0-30</id>
 								<phase>integration-test</phase>
@@ -151,7 +150,7 @@
 									<goal>report</goal>
 								</goals>
 								<configuration>
-									<showgc>true</showgc>
+									<showgc>false</showgc>
 									<showpercentile99>true</showpercentile99>
 									<reportid>loadtest_2000-3000-report</reportid>
 									<dataid>loadtest_2000-3000-data</dataid>
@@ -159,7 +158,32 @@
 									<title>Load test 2000-3000 logentry responses, 5 req/sec peak requirement</title>
 								</configuration>
 							</execution>
--->
+							<execution>
+								<id>loadtest_200-300-inserts</id>
+								<phase>integration-test</phase>
+								<goals>
+								  <goal>jmeter</goal>
+								</goals>
+								<configuration>
+									<dataid>loadtest_200-300-inserts-data</dataid>
+									<input>${basedir}/jmx/loadtest_200-300-inserts.jmx</input>
+								</configuration>
+							</execution>
+							<execution>
+								<id>loadtest_200-300-inserts-report</id>
+								<phase>site</phase>
+								<goals>
+									<goal>report</goal>
+								</goals>
+								<configuration>
+									<showgc>false</showgc>
+									<showpercentile99>true</showpercentile99>
+									<reportid>loadtest_200-300-inserts-report</reportid>
+									<dataid>loadtest_200-300-inserts-data</dataid>
+									<description>Load test 200-300 logentry with 500 inserts/sec</description>
+									<title>Load test 200-300 logentry responses with 500 inserts/sec, 5 req/sec peak requirement</title>
+								</configuration>
+							</execution>
 							<execution>
 								<id>stresstest</id>
 								<phase>integration-test</phase>
@@ -178,7 +202,7 @@
 									<goal>report</goal>
 								</goals>
 								<configuration>
-									<showgc>true</showgc>
+									<showgc>false</showgc>
 									<showpercentile99>true</showpercentile99>
 									<reportid>stresstest-report</reportid>
 									<dataid>stresstest-data</dataid>
