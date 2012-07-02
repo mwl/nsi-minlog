@@ -37,7 +37,7 @@ import org.springframework.context.annotation.Configuration;
 import com.splunk.Service;
 
 @Configuration
-@ComponentScan({"dk.nsi.minlog.dao.splunk"})
+@ComponentScan({"dk.nsi.minlog.export.dao.splunk"})
 public class SplunkConfig {
 	static final Logger logger = Logger.getLogger(SplunkConfig.class);
 

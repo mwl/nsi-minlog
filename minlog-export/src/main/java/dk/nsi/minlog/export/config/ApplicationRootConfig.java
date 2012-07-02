@@ -46,7 +46,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @Configuration
 @EnableScheduling
 @EnableTransactionManagement
-@ComponentScan({"dk.nsi.minlog.export.web"})
+@ComponentScan({"dk.nsi.minlog.export.web", "dk.nsi.minlog.export.job"})
 public class ApplicationRootConfig {	
     @Bean
     public static PropertyPlaceholderConfigurer configuration() {

@@ -48,7 +48,7 @@ import dk.nsi.minlog.export.domain.LogEntry;
 
 @Configuration
 @EnableTransactionManagement
-@ComponentScan({"dk.nsi.minlog.dao.ebean"})
+@ComponentScan({"dk.nsi.minlog.export.dao.ebean"})
 public class DatabaseConfig implements TransactionManagementConfigurer{
 	static final Logger logger = Logger.getLogger(DatabaseConfig.class);
 
