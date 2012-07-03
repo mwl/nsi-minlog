@@ -25,7 +25,7 @@
  */
 package dk.nsi.minlog.ws.ws;
 
-import java.util.Collection;
+import java.util.List;
 
 import javax.inject.Inject;
 import javax.xml.datatype.XMLGregorianCalendar;
@@ -47,8 +47,8 @@ import com.trifork.dgws.annotations.Protected;
 import dk.nsi.minlog._2012._05._24.ListLogStatementsRequest;
 import dk.nsi.minlog._2012._05._24.ListLogStatementsResponse;
 import dk.nsi.minlog._2012._05._24.NameFormat;
+import dk.nsi.minlog.domain.LogEntry;
 import dk.nsi.minlog.ws.dao.LogEntryDao;
-import dk.nsi.minlog.ws.domain.LogEntry;
 
 @SuppressWarnings("restriction")
 @Repository("minlogudtraekservice")
@@ -75,7 +75,7 @@ public class MinlogudtraekserviceImpl implements Minlogudtraekservice {
 	@ResponsePayload
 	public ListLogStatementsResponse listLogStatements(@RequestPayload ListLogStatementsRequest request, SoapHeader soapHeader) {
 		final ListLogStatementsResponse response = new ListLogStatementsResponse();
-		final Collection<LogEntry> logEntries = logEntryDao.findByCPRAndDates(request.getCprNR(), nullableDateTime(request.getFraDato()), nullableDateTime(request.getTilDato()));
+		final List<LogEntry> logEntries = logEntryDao.findByCPRAndDates(request.getCprNR(), nullableDateTime(request.getFraDato()), nullableDateTime(request.getTilDato()));
 
 		logger.debug("Found " + logEntries.size() + " log entries for " + request.getCprNR());
 

@@ -29,26 +29,9 @@ import java.util.List;
 
 import org.joda.time.DateTime;
 
-import dk.nsi.minlog.export.domain.LogEntry;
+import dk.nsi.minlog.domain.LogEntry;
 
-/**
- * Dao for logEntry
- * @author kpi
- *
- */
 public interface LogEntryDao {
-	/**
-	 * Delete all the log entries before the specified date.
-	 * 
-	 * @param date
-	 * @return The number of deleted log entries;
-	 */	
 	long removeBefore(DateTime date);
-	
-	/**
-	 * Saves the logEntries
-	 * 
-	 * @param logEntries
-	 */	
 	void save(List<LogEntry> logEntries);		
 }

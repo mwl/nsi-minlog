@@ -1,3 +1,4 @@
+package dk.nsi.minlog.domain;
 /**
  * The MIT License
  *
@@ -23,7 +24,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package dk.nsi.minlog.export.domain;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -56,6 +56,7 @@ public class LogEntry {
     @Transient
     private DateTime lastUpdated;
 
+    //Used by ebeans
 	public Long getId() {
 		return id;
 	}

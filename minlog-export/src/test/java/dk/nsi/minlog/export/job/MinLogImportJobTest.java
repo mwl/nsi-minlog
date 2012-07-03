@@ -25,10 +25,10 @@
  */
 package dk.nsi.minlog.export.job;
 
+import static org.junit.Assert.assertFalse;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.junit.Assert.*;
 
 import java.util.Collections;
 import java.util.List;
@@ -40,10 +40,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import dk.nsi.minlog.domain.LogEntry;
 import dk.nsi.minlog.export.dao.LogEntryDao;
 import dk.nsi.minlog.export.dao.StatusDao;
 import dk.nsi.minlog.export.dao.splunk.LogEntrySearchDaoSplunk;
-import dk.nsi.minlog.export.domain.LogEntry;
 
 @RunWith(MockitoJUnitRunner.class)
 public class MinLogImportJobTest {

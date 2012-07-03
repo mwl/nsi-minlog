@@ -25,6 +25,7 @@
  */
 package dk.nsi.minlog.export.dao.splunk;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -44,8 +45,8 @@ import com.splunk.ResultsReader;
 import com.splunk.ResultsReaderXml;
 import com.splunk.Service;
 
+import dk.nsi.minlog.domain.LogEntry;
 import dk.nsi.minlog.export.dao.LogEntrySearchDao;
-import dk.nsi.minlog.export.domain.LogEntry;
 @Repository
 public class LogEntrySearchDaoSplunk implements LogEntrySearchDao {
 	static final Logger logger = Logger.getLogger(LogEntrySearchDaoSplunk.class);
@@ -80,7 +81,9 @@ public class LogEntrySearchDaoSplunk implements LogEntrySearchDao {
 			logger.trace("Busy spinning...");
 			try {
 				Thread.sleep(sleep);
-			} catch (Exception e) {}
+			} catch (Exception e) {
+				Thread.currentThread().interrupt();
+			}
 			
 			job.refresh();
 			
@@ -95,25 +98,34 @@ public class LogEntrySearchDaoSplunk implements LogEntrySearchDao {
 		
 		List<LogEntry> result = new ArrayList<LogEntry>();
 		 
-		Map<String, String> resultMap;	
 		InputStream stream = job.getResults(resultOptions);
 
-		ResultsReader resultsReader;
 		try {
-			resultsReader = new ResultsReaderXml(stream);
-			while ((resultMap = resultsReader.getNextEvent()) != null) {
-				result.add(transformMapToEntity(resultMap));
+			ResultsReader resultsReader = new ResultsReaderXml(stream);
+			try{
+				Map<String, String> resultMap;
+				while ((resultMap = resultsReader.getNextEvent()) != null) {
+					result.add(transformMapToEntity(resultMap));
+				}
+			} finally {
+				resultsReader.close();
 			}
 		//api for ResultsReaderXml is a bit ugly, it throws Exception
 		} catch (Exception e) {
 			logger.error("Failed to transform xml to entity", e);
 			throw new RuntimeException("Failed to transform xml to entity from splunk");
+		} finally {
+			try {
+				stream.close();				
+			} catch(IOException e){
+				logger.error("Failed to close stream", e);
+			}
 		}
 		
 		return result;
 	}
 	
-	private static LogEntry transformMapToEntity(final Map<String, String> map) throws IllegalArgumentException{
+	private static LogEntry transformMapToEntity(final Map<String, String> map) {
 		if(logger.isTraceEnabled()){
 			logger.trace("Mapping to entity: \n" + map);			
 		}

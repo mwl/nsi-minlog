@@ -30,14 +30,13 @@ import javax.inject.Inject;
 import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import dk.nsi.minlog.export.dao.LogEntryDao;
 /**
  * A job which cleans the database by deleting entries that are older then 2 years.
  */	
-@Repository
+//@Repository
 public class MinLogCleanupJob {	
 	private static Logger logger = Logger.getLogger(MinLogCleanupJob.class);
 
@@ -48,7 +47,7 @@ public class MinLogCleanupJob {
 		
 	@Transactional
 	@Scheduled(cron = "${minlog.cleanup.cron}")
-	public void cleanup(){
+	public void cleanup() throws Exception{
 		// Only one job is allow to run at a time.
 		if(!running){
 			running = true;
@@ -59,8 +58,10 @@ public class MinLogCleanupJob {
 				logger.info("Deleted " + entries + " entries");
 			} catch(Exception e){
 				logger.warn("Failed to execute cleanup job", e);
+				throw e;
+			} finally {
+				running = false;				
 			}
-			running = false;
 		}
 	}
 	

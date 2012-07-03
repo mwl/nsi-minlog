@@ -13,6 +13,7 @@
 		<module>test-deps</module>
 		<module>performance</module>
 		<module>deps</module>
+		<module>shared</module>
 	</modules>
 	<scm>
 		<url>https://github.com/trifork/nsi-minlog</url>
@@ -54,6 +55,12 @@
 				<artifactId>deps</artifactId>
 				<version>${project.version} </version>
 				<type>pom</type>
+			</dependency>
+			<dependency>
+				<groupId>dk.minlog</groupId>
+				<artifactId>shared</artifactId>
+				<version>${project.version} </version>
+				<type>jar</type>
 			</dependency>
 			<dependency>
 				<groupId>dk.minlog</groupId>

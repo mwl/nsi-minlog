@@ -63,7 +63,7 @@ public class IsAliveTest {
 	 * @throws IOException
 	 */	
 	@Test
-	public void checkAll() throws Exception, Exception {
+	public void checkAll() throws Exception {
 		when(dataSource.getConnection().createStatement().executeQuery("SELECT 1").next()).thenReturn(true);
 		when(dataSource.getConnection().createStatement().executeQuery("SELECT 1").getInt(1)).thenReturn(1);
 				

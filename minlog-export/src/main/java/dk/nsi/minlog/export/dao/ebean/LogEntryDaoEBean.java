@@ -27,32 +27,49 @@ package dk.nsi.minlog.export.dao.ebean;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
+import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
-import com.avaje.ebean.ExpressionList;
+import com.avaje.ebean.SqlUpdate;
 
+import dk.nsi.minlog.dao.ebean.SupportDao;
+import dk.nsi.minlog.domain.LogEntry;
 import dk.nsi.minlog.export.dao.LogEntryDao;
-import dk.nsi.minlog.export.domain.LogEntry;
+import dk.nsi.minlog.export.dao.StatusDao;
 
 @Repository
 public class LogEntryDaoEBean extends SupportDao<LogEntry> implements LogEntryDao {
+	private static Logger logger = Logger.getLogger(LogEntryDaoEBean.class);
+
+	@Inject StatusDao statusDao;
+	
 	protected LogEntryDaoEBean() {
 		super(LogEntry.class);
 	}
 	
 	@Override
+	@Transactional
 	public long removeBefore(DateTime date){
-		ExpressionList<LogEntry> query = query().where().le("tidspunkt", date);
-		List<Object> ids = query.findIds();
-		long numberOfIds = ids.size();
-		ebeanServer.delete(LogEntry.class, ids);
-		
+		SqlUpdate query = ebeanServer.createSqlUpdate("DELETE FROM LogEntry WHERE tidspunkt <= :date");
+		int numberOfIds = query.execute();
 		return numberOfIds;
 	}
 
 	@Override
+	@Transactional
 	public void save(List<LogEntry> logEntries) {
+		// Assume logEntries are sorted, so latestUpdate will be the last entry
+		LogEntry last = logEntries.get(logEntries.size() - 1);
+
+		if (logger.isDebugEnabled()) {
+			logger.debug("Updating lastUpdated to " + last.getLastUpdated());
+		}
+
 		ebeanServer.save(logEntries);
+		statusDao.setLastUpdated(last.getLastUpdated());
 	}
 }

@@ -29,11 +29,14 @@ import java.util.List;
 
 import org.joda.time.DateTime;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.avaje.ebean.ExpressionList;
 
+import dk.nsi.minlog.dao.ebean.SupportDao;
+import dk.nsi.minlog.domain.LogEntry;
 import dk.nsi.minlog.ws.dao.LogEntryDao;
-import dk.nsi.minlog.ws.domain.LogEntry;
 
 @Repository
 public class LogEntryDaoEBean extends SupportDao<LogEntry> implements LogEntryDao {
@@ -42,6 +45,7 @@ public class LogEntryDaoEBean extends SupportDao<LogEntry> implements LogEntryDa
 	}
 
 	@Override
+	@Transactional(propagation=Propagation.MANDATORY)
 	public List<LogEntry> findByCPRAndDates(String cpr, DateTime from, DateTime to) {
 		ExpressionList<LogEntry> query = query().where().eq("cprNrBorger", cpr);
 		if(from != null){
