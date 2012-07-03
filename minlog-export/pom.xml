@@ -17,8 +17,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>dk.minlog</groupId>
-			<artifactId>deps</artifactId>
-			<type>pom</type>
+			<artifactId>shared</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>dk.minlog</groupId>

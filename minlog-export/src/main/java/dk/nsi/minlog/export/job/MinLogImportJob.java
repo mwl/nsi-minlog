@@ -35,12 +35,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Repository;
 
-import com.avaje.ebean.annotation.Transactional;
-
+import dk.nsi.minlog.domain.LogEntry;
 import dk.nsi.minlog.export.dao.LogEntryDao;
 import dk.nsi.minlog.export.dao.LogEntrySearchDao;
 import dk.nsi.minlog.export.dao.StatusDao;
-import dk.nsi.minlog.export.domain.LogEntry;
 
 /**
  * Imports log entries from splunk into a database.
@@ -77,7 +75,7 @@ public class MinLogImportJob {
 			running = true;
 
 			try {
-				DateTime from = getLastUpdated();
+				DateTime from = statusDao.getLastUpdated();
 				DateTime to = DateTime.now().minusMillis(delay);
 
 				if (logger.isDebugEnabled()) {
@@ -87,16 +85,8 @@ public class MinLogImportJob {
 				List<LogEntry> logEntries = logEntrySearchDao.findLogEntries(from, to);
 
 				if (logEntries.size() > 0) {
-					// Assume logEntries are sorted, so latestUpdate will be the
-					// last
-					// entry
-					LogEntry last = logEntries.get(logEntries.size() - 1);
-
-					if (logger.isDebugEnabled()) {
-						logger.debug("Updating lastUpdated to " + last.getLastUpdated());
-					}
-
-					updateDatabase(logEntries, last.getLastUpdated());
+					//save also updates the status in same transaction
+					logEntryDao.save(logEntries);
 				}
 			} catch (Exception e) {
 				logger.error("Import failed, setting running to false for next iteration", e);
@@ -105,26 +95,7 @@ public class MinLogImportJob {
 			running = false;
 		}
 	}
-	
-	@Transactional
-	private DateTime getLastUpdated(){
-		return statusDao.getLastUpdated();
-	}
-	
-	/**
-	 * We want to make the update in a seperate transaction, 
-	 * so we do not lock down the datasource while searching.
-	 * 
-	 * We also make sure we update the status in the same transaction as we insert the LogEntries.
-	 * 
-	 * @param logEntries
-	 */	
-	@Transactional
-	private void updateDatabase(List<LogEntry> logEntries, DateTime to){
-		logEntryDao.save(logEntries);
-		statusDao.setLastUpdated(to);
-	}
-	
+			
 	/**
 	 * Check if import is running
 	 * 

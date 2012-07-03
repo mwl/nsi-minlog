@@ -25,17 +25,13 @@
  */
 package com.trifork.stamdata.util;
 
-import org.apache.log4j.PropertyConfigurator;
-import org.apache.log4j.xml.DOMConfigurator;
-
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 /**
+ * 
+ * 
  * Idea borrowed from http://logging.apache.org/log4j/1.2/manual.html - modified to be a ServletContextListener instead.
  */
 public class Log4jInitServletListener implements ServletContextListener {

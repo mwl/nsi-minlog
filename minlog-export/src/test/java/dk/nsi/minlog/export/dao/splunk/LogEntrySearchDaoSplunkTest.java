@@ -48,7 +48,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import com.splunk.Job;
 import com.splunk.Service;
 
-import dk.nsi.minlog.export.domain.LogEntry;
+import dk.nsi.minlog.domain.LogEntry;
 
 @RunWith(MockitoJUnitRunner.class)
 public class LogEntrySearchDaoSplunkTest {

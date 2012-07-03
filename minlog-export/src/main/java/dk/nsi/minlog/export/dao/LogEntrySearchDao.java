@@ -30,7 +30,7 @@ import java.util.List;
 
 import org.joda.time.DateTime;
 
-import dk.nsi.minlog.export.domain.LogEntry;
+import dk.nsi.minlog.domain.LogEntry;
 
 public interface LogEntrySearchDao {
 	public List<LogEntry> findLogEntries(DateTime from, DateTime to);

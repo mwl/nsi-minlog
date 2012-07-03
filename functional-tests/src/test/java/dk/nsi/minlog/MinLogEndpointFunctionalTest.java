@@ -25,9 +25,10 @@
  */
 package dk.nsi.minlog;
 
-import static net.javacrumbs.smock.common.SmockCommon.*;
-import static net.javacrumbs.smock.common.server.CommonSmockServer.*;
-import static org.springframework.ws.test.server.ResponseMatchers.*;
+import static net.javacrumbs.smock.common.SmockCommon.resource;
+import static net.javacrumbs.smock.common.server.CommonSmockServer.withMessage;
+import static org.springframework.ws.test.server.ResponseMatchers.noFault;
+import static org.springframework.ws.test.server.ResponseMatchers.payload;
 
 import javax.annotation.Resource;
 

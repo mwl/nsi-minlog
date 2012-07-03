@@ -44,7 +44,7 @@ import com.avaje.ebean.config.ServerConfig;
 import com.avaje.ebean.springsupport.factory.EbeanServerFactoryBean;
 import com.avaje.ebean.springsupport.txn.SpringAwareJdbcTransactionManager;
 
-import dk.nsi.minlog.export.domain.LogEntry;
+import dk.nsi.minlog.domain.LogEntry;
 
 @Configuration
 @EnableTransactionManagement

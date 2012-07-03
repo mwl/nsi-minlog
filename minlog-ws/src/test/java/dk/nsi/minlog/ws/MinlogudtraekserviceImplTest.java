@@ -27,7 +27,11 @@ package dk.nsi.minlog.ws;
 
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.*;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Matchers.isNull;
+import static org.mockito.Matchers.notNull;
+import static org.mockito.Mockito.when;
 
 import javax.xml.datatype.XMLGregorianCalendar;
 
@@ -43,8 +47,8 @@ import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl
 
 import dk.nsi.minlog._2012._05._24.ListLogStatementsRequest;
 import dk.nsi.minlog._2012._05._24.ListLogStatementsResponse;
+import dk.nsi.minlog.domain.LogEntry;
 import dk.nsi.minlog.ws.dao.LogEntryDao;
-import dk.nsi.minlog.ws.domain.LogEntry;
 import dk.nsi.minlog.ws.ws.MinlogudtraekserviceImpl;
 
 @RunWith(MockitoJUnitRunner.class)

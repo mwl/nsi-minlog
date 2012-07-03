@@ -25,9 +25,11 @@
  */
 package dk.nsi.minlog.export.job;
 
-import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.verify;
 
 import org.joda.time.DateTime;
 import org.junit.Test;
@@ -38,14 +40,13 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
 
-import dk.nsi.minlog.export.job.MinLogCleanupJob;
 import dk.nsi.minlog.export.dao.LogEntryDao;
 
 @RunWith(MockitoJUnitRunner.class)
 public class MinLogCleanupJobTest {
 	
 	@Mock
-	LogEntryDao registreringDao;
+	LogEntryDao logEntryDao;
 	
 	@InjectMocks
 	MinLogCleanupJob job;
@@ -53,11 +54,12 @@ public class MinLogCleanupJobTest {
 	
 	/**
 	 * Make sure we call the dao on a standard clean up. 
+	 * @throws Exception 
 	 */
 	@Test
-	public void removeExecution() {
+	public void removeExecution() throws Exception {
 		job.cleanup();
-		verify(registreringDao).removeBefore((DateTime)any());
+		verify(logEntryDao).removeBefore((DateTime)any());
 	}
 	
 
@@ -65,7 +67,7 @@ public class MinLogCleanupJobTest {
 	 * Test that we are not allowed to run two concurrent cleanup jobs at the same time.
 	 */
 	@Test
-	public void concurrentCleanupRuns(){
+	public void concurrentCleanupRuns() throws Exception{
 		//Delay the answers so we make sure we only run job one at a time
 		doAnswer(new Answer<Object>() {
 		     public Object answer(InvocationOnMock invocation) {
@@ -73,28 +75,37 @@ public class MinLogCleanupJobTest {
 		         return null;
 		     }
 		})
-		.when(registreringDao).removeBefore((DateTime)any());		
+		.when(logEntryDao).removeBefore((DateTime)any());		
 
 		//Start first cleanup in a seperate thread, so we can run second cleanup async.
 		new Thread(){
 			public void run() {
-				job.cleanup();				
+				try {
+					job.cleanup();
+				} catch (Exception e) {
+					fail("Should not throw exception here");
+				}				
 			};
 		}.start();
 		
 		job.cleanup();
 
 		//Mockito assumes mocked object methods are only called once
-		verify(registreringDao).removeBefore((DateTime)any());
+		verify(logEntryDao).removeBefore((DateTime)any());
 	}
 	
 	/**
 	 * Test that job is not running after exception is throw. This allows us to run the job again.
 	 */
 	@Test
-	public void assumeNotRunningOnException(){
-		doThrow(new RuntimeException()).when(registreringDao).removeBefore((DateTime)any());
-		job.cleanup();
+	public void assumeNotRunningOnException() throws Exception{
+		Exception ex = new RuntimeException();
+		doThrow(ex).when(logEntryDao).removeBefore((DateTime)any());
+		try{
+			job.cleanup();
+		} catch(RuntimeException e) {
+			assertEquals(ex, e);
+		}
 		assertFalse(job.isRunning());
 	}
 }

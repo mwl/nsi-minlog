@@ -23,7 +23,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package dk.nsi.minlog.ws.dao.ebean;
+package dk.nsi.minlog.dao.ebean;
 
 import javax.inject.Inject;
 
@@ -39,7 +39,7 @@ import com.avaje.ebean.Query;
 
 public abstract class SupportDao<T> {
     @Inject
-    EbeanServer ebeanServer;
+    protected EbeanServer ebeanServer;
 
     protected final Class<T> klass;
 

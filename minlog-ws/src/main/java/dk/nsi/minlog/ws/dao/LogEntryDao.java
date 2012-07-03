@@ -29,7 +29,7 @@ import java.util.List;
 
 import org.joda.time.DateTime;
 
-import dk.nsi.minlog.ws.domain.LogEntry;
+import dk.nsi.minlog.domain.LogEntry;
 
 /**
  * Dao for logEntry

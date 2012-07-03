@@ -25,12 +25,9 @@
  */
 package dk.nsi.minlog.export.dao.ebean;
 
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.verify;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import static org.mockito.Mockito.when;
 
 import org.joda.time.DateTime;
 import org.junit.Test;
@@ -43,7 +40,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 import com.avaje.ebean.EbeanServer;
 
 import dk.nsi.minlog.export.dao.LogEntryDao;
-import dk.nsi.minlog.export.domain.LogEntry;
 
 @RunWith(MockitoJUnitRunner.class)
 public class LogEntryDaoEBeanTest {
@@ -54,24 +50,14 @@ public class LogEntryDaoEBeanTest {
 	@Mock(answer=Answers.RETURNS_DEEP_STUBS)
 	EbeanServer ebeanServer;
 		
-	public List<LogEntry> createResult(){
-		List<LogEntry> entries = new ArrayList<LogEntry>();
-		entries.add(new LogEntry());
-		entries.add(new LogEntry());
-		entries.add(new LogEntry());		
-		return entries;
-	}
-
 	/**
 	 * Test if we can delete data from the dao
 	 * 
 	 * @throws Exception
 	 */	
-	@SuppressWarnings("unchecked")
 	@Test
-	public void removeBefore() throws Exception{		
-		logEntryDao.removeBefore(DateTime.now());
-		
-		verify(ebeanServer).delete((Class<LogEntry>)any(), (Collection<LogEntry>)any());
+	public void removeBefore() throws Exception{	
+		when(ebeanServer.createSqlUpdate((String)any()).execute()).thenReturn(3);
+		assertEquals(3, logEntryDao.removeBefore(DateTime.now()));
 	}
 }

@@ -51,7 +51,7 @@ import com.avaje.ebean.springsupport.factory.EbeanServerFactoryBean;
 import com.avaje.ebean.springsupport.txn.SpringAwareJdbcTransactionManager;
 import com.googlecode.flyway.core.Flyway;
 
-import dk.nsi.minlog.ws.domain.LogEntry;
+import dk.nsi.minlog.domain.LogEntry;
 
 /**
  * Creates an embedded mysql server process to run tests against.
