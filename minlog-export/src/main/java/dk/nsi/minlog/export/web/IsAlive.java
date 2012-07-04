@@ -42,44 +42,50 @@ import com.splunk.Service;
 
 /**
  * Service to check if everything is okey.
- * 
+ *
  * @author kpi
  *
  */
 @Repository("isAlive")
 public class IsAlive {
-    
+
 	@Inject
 	DataSource dataSource;
 
 	@Inject
 	Service splunkService;
-	
+
 	/**
 	 * Checks if we have access to the database by doing a simple query.
-	 * 
+	 *
 	 * @param out Writes out the result to this jsp writer.
 	 * @throws IOException
 	 * @throws SQLException
 	 */
 	public void checkAll(JspWriter out) throws Exception{
-		out.println("Checking database connection");
-		Connection connection = dataSource.getConnection();
-		Statement statement = connection.createStatement();
-		ResultSet rs = statement.executeQuery("SELECT 1");		
-		if(!rs.next() || rs.getInt(1) != 1){
-			throw new RuntimeException("Invalid result from database");
-		}		
-		statement.close();
-		connection.close();
-		
-		out.println("Check database connection - OK");
-		
-		out.println("Checking database connection - OK");
-		
-		out.println("Checking splunk connection");		
-		splunkService.getInfo();
-		
-		out.println("Checking splunk connection - OK");
+		Statement statement = null;
+		Connection connection = null;
+
+		try {
+			// Checking database connection
+			connection = dataSource.getConnection();
+			statement = connection.createStatement();
+
+			ResultSet rs = statement.executeQuery("SELECT 1");
+			if (!rs.next() || rs.getInt(1) != 1){
+				throw new RuntimeException("Invalid result from database");
+			}
+
+			// Checking splunk connection (throws exception on error)
+			splunkService.getInfo();
+		}
+		finally {
+			try {
+	                        if (statement != null) statement.close();
+			}
+			finally {
+	                        if (connection != null) connection.close();
+			}
+		}
 	}
 }

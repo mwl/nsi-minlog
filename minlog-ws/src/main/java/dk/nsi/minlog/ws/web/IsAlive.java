@@ -40,34 +40,44 @@ import org.springframework.stereotype.Repository;
 
 /**
  * Service to check if everything is okey.
- * 
+ *
  * @author kpi
  *
  */
 @Repository("isAlive")
 public class IsAlive {
-    
+
 	@Inject
 	DataSource dataSource;
 
 	/**
 	 * Checks if we have access to the database by doing a simple query.
-	 * 
+	 *
 	 * @param out Writes out the result to this jsp writer.
 	 * @throws IOException
 	 * @throws SQLException
 	 */
 	public void checkAll(JspWriter out) throws IOException, SQLException{
-		out.println("Checking database connection");
-		Connection connection = dataSource.getConnection();
-		Statement statement = connection.createStatement();
-		ResultSet rs = statement.executeQuery("SELECT 1");		
-		if(!rs.next() || rs.getInt(1) != 1){
-			throw new RuntimeException("Invalid result from database");
-		}		
-		statement.close();
-		connection.close();
-		
-		out.println("Check database connection - OK");
+                Statement statement = null;
+                Connection connection = null;
+
+		try {
+			// Checking database connection
+			connection = dataSource.getConnection();
+			statement = connection.createStatement();
+
+			ResultSet rs = statement.executeQuery("SELECT 1");
+			if(!rs.next() || rs.getInt(1) != 1){
+				throw new RuntimeException("Invalid result from database");
+			}
+		}
+		finally {
+                        try {
+                                if (statement != null) statement.close();
+                        }
+                        finally {
+                                if (connection != null) connection.close();
+                        }
+		}
 	}
 }
