@@ -27,6 +27,8 @@ package dk.nsi.minlog.ws;
 
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isNull;
@@ -105,6 +107,18 @@ public class MinlogudtraekserviceImplTest {
 			setTidspunkt(new DateTime());
 		}});
 		
+		LogEntry emptyOrg = (new LogEntry(){{
+			setAnsvarlig("ansvarlig");
+			setBruger("bruger");
+			setCprNrBorger("1234");
+			setHandling("handling");
+			setId(10l);
+			setOrgUsingID("");
+			setRegKode("regKode");
+			setSessionId("abc");
+			setSystemName("System");
+			setTidspunkt(new DateTime());
+		}});
 		
 		when(logEntryDao.findByCPRAndDates(eq("1234"), (DateTime)isNull(), (DateTime)isNull())).thenReturn(asList(new LogEntry[]{
 			entries[0], entries[1]
@@ -124,6 +138,10 @@ public class MinlogudtraekserviceImplTest {
 		
 		when(logEntryDao.findByCPRAndDates(eq("error"), (DateTime)any(), (DateTime)any())).thenReturn(asList(new LogEntry[]{
 				error
+		}));
+		
+		when(logEntryDao.findByCPRAndDates(eq("emptyOrg"), (DateTime)any(), (DateTime)any())).thenReturn(asList(new LogEntry[]{
+				emptyOrg
 		}));
 	}
 	
@@ -193,6 +211,14 @@ public class MinlogudtraekserviceImplTest {
 		assertEquals("bruger7", response.getLogEntry().get(1).getBruger());
 	}
 
+	@Test
+	public void emptyOrganisation() {
+		ListLogStatementsRequest request = new ListLogStatementsRequest();
+		request.setCprNR("emptyOrg");		
+		ListLogStatementsResponse response = service.listLogStatements(request, null);
+		assertNull(null, response.getLogEntry().get(0).getBrugerOrganisation());
+	}
+	
 	/**
 	 * Check if we the service throws an exception when the requested data is invalid.
 	 */

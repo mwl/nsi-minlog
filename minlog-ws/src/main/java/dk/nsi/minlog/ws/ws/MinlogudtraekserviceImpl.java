@@ -114,10 +114,12 @@ public class MinlogudtraekserviceImpl implements Minlogudtraekservice {
 				BrugerOrganisation brugerOrganisation = new BrugerOrganisation();
 				brugerOrganisation.setValue(entry.getOrgUsingID());
 
-				String[] orgUsingID = entry.getOrgUsingID().split(":");
-				brugerOrganisation.setNameFormat(nfFromString(orgUsingID[0]));
-				brugerOrganisation.setValue(orgUsingID[1]);
-				setBrugerOrganisation(brugerOrganisation);
+				if(entry.getOrgUsingID() != null && !entry.getOrgUsingID().isEmpty()){
+					String[] orgUsingID = entry.getOrgUsingID().split(":");				
+					brugerOrganisation.setNameFormat(nfFromString(orgUsingID[0]));
+					brugerOrganisation.setValue(orgUsingID[1]);
+					setBrugerOrganisation(brugerOrganisation);
+				}
 
 				setSystem(entry.getSystemName());
 				setHandling(entry.getHandling());
