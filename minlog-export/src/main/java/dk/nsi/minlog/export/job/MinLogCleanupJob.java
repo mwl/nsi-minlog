@@ -33,6 +33,8 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.transaction.annotation.Transactional;
 
 import dk.nsi.minlog.export.dao.LogEntryDao;
+import dk.sdsd.nsp.slalog.api.SLALogItem;
+import dk.sdsd.nsp.slalog.api.SLALogger;
 /**
  * A job which cleans the database by deleting entries that are older then 2 years.
  */	
@@ -42,6 +44,9 @@ public class MinLogCleanupJob {
 
 	@Inject
 	private LogEntryDao logEntryDao;
+	
+	@Inject
+	private SLALogger slaLogger;
 	
 	private boolean running;
 		
@@ -53,8 +58,14 @@ public class MinLogCleanupJob {
 			running = true;
 			try{
 				DateTime date = DateTime.now().minusYears(2);	
+				SLALogItem slaLogCleanup = slaLogger.createLogItem("Database cleanup", "clean up entries before " + date);
 				logger.info("Running cleanup job for entries before " + date);
+				
 				long entries = logEntryDao.removeBefore(date);
+				
+				slaLogCleanup.setCallResultOk();
+				slaLogCleanup.store();
+				
 				logger.info("Deleted " + entries + " entries");
 			} catch(Exception e){
 				logger.warn("Failed to execute cleanup job", e);

@@ -29,11 +29,9 @@ import static org.mockito.Mockito.mock;
 
 import javax.sql.DataSource;
 
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -42,6 +40,8 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import com.avaje.ebean.EbeanServer;
 import com.avaje.ebean.springsupport.factory.EbeanServerFactoryBean;
 import com.splunk.Service;
+
+import dk.sdsd.nsp.slalog.api.SLALogger;
 
 /**
  * Simple test to see if spring is correctly setup, and all dependecies are met.
@@ -53,7 +53,7 @@ import com.splunk.Service;
  */
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes={ApplicationRootConfig.class, ConfigTest.DatabaseConfigConfigTest.class, ConfigTest.SplunkConfigTest.class})
+@ContextConfiguration(classes={ApplicationRootConfig.class, ConfigTest.DatabaseConfigConfigTest.class, ConfigTest.SplunkConfigTest.class, ConfigTest.SLALooggerConfigTest.class})
 public class ConfigTest {
 			
 	@Test
@@ -87,6 +87,15 @@ public class ConfigTest {
 		@Override
 		public Service splunkService(){
 			return mock(Service.class);
+		}
+	}
+	
+	@Configuration
+	public static class SLALooggerConfigTest extends SLALoggerConfig{
+		
+		@Bean
+		public SLALogger slaLogger(){
+			return mock(SLALogger.class);
 		}
 	}
 	

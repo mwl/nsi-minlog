@@ -36,6 +36,7 @@ import java.util.List;
 import org.joda.time.DateTime;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Answers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -44,6 +45,7 @@ import dk.nsi.minlog.domain.LogEntry;
 import dk.nsi.minlog.export.dao.LogEntryDao;
 import dk.nsi.minlog.export.dao.StatusDao;
 import dk.nsi.minlog.export.dao.splunk.LogEntrySearchDaoSplunk;
+import dk.sdsd.nsp.slalog.api.SLALogger;
 
 @RunWith(MockitoJUnitRunner.class)
 public class MinLogImportJobTest {
@@ -56,7 +58,10 @@ public class MinLogImportJobTest {
 	
 	@Mock
 	StatusDao statusDao;
-		
+	
+	@Mock(answer=Answers.RETURNS_DEEP_STUBS)
+	SLALogger slaLogger;
+	
 	@InjectMocks
 	MinLogImportJob minLogImportJob;
 	

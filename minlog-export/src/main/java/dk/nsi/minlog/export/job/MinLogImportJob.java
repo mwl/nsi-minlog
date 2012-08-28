@@ -39,6 +39,8 @@ import dk.nsi.minlog.domain.LogEntry;
 import dk.nsi.minlog.export.dao.LogEntryDao;
 import dk.nsi.minlog.export.dao.LogEntrySearchDao;
 import dk.nsi.minlog.export.dao.StatusDao;
+import dk.sdsd.nsp.slalog.api.SLALogItem;
+import dk.sdsd.nsp.slalog.api.SLALogger;
 
 /**
  * Imports log entries from splunk into a database.
@@ -59,6 +61,9 @@ public class MinLogImportJob {
 	
 	@Inject 
 	private StatusDao statusDao; 
+	
+	@Inject
+	private SLALogger slaLogger;
 	
 	@Value("${minlog.import.delay}")
 	public Integer delay;
@@ -82,11 +87,19 @@ public class MinLogImportJob {
 					logger.debug("Fetching data from " + from + " to " + to);
 				}
 
+				SLALogItem slaLogImport = slaLogger.createLogItem("Splunk import", "Fetching data from " + from + " to " + to);
 				List<LogEntry> logEntries = logEntrySearchDao.findLogEntries(from, to);
+				slaLogImport.setCallResultOk();
+				slaLogImport.store();
+				
 
 				if (logEntries.size() > 0) {
+					SLALogItem slaLogSave = slaLogger.createLogItem("Database save", "Saving " + logEntries.size() + " items");
 					//save also updates the status in same transaction
 					logEntryDao.save(logEntries);
+					slaLogSave.setCallResultOk();
+					slaLogImport.store();
+					
 				}
 			} catch (Exception e) {
 				logger.error("Import failed, setting running to false for next iteration", e);

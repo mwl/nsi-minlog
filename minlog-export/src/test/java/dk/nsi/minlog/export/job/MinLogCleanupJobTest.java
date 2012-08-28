@@ -25,7 +25,9 @@
  */
 package dk.nsi.minlog.export.job;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doThrow;
@@ -34,6 +36,7 @@ import static org.mockito.Mockito.verify;
 import org.joda.time.DateTime;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Answers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
@@ -41,13 +44,17 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
 
 import dk.nsi.minlog.export.dao.LogEntryDao;
+import dk.sdsd.nsp.slalog.api.SLALogger;
 
 @RunWith(MockitoJUnitRunner.class)
 public class MinLogCleanupJobTest {
 	
 	@Mock
 	LogEntryDao logEntryDao;
-	
+
+	@Mock(answer=Answers.RETURNS_DEEP_STUBS)
+	SLALogger slaLogger;
+
 	@InjectMocks
 	MinLogCleanupJob job;
 

@@ -49,12 +49,16 @@ import com.splunk.Job;
 import com.splunk.Service;
 
 import dk.nsi.minlog.domain.LogEntry;
+import dk.sdsd.nsp.slalog.api.SLALogger;
 
 @RunWith(MockitoJUnitRunner.class)
 public class LogEntrySearchDaoSplunkTest {
 
 	@Mock(answer=Answers.RETURNS_DEEP_STUBS)
 	Service splunkService;
+	
+	@Mock(answer=Answers.RETURNS_DEEP_STUBS)
+	SLALogger slaLogger;
 	
 	@InjectMocks
 	LogEntrySearchDaoSplunk logEntrySearchDao; 

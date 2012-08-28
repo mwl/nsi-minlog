@@ -31,7 +31,6 @@ import javax.inject.Inject;
 
 import org.joda.time.DateTime;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.avaje.ebean.EbeanServer;

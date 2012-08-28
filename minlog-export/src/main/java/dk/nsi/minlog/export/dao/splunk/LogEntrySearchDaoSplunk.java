@@ -58,6 +58,7 @@ public class LogEntrySearchDaoSplunk implements LogEntrySearchDao {
 	Service splunkService;
 
 	
+	
 	Map<String, String> resultOptions;  
 	static final String FIELDS = "_indextime, _time, EventDateTime, PersonCivilRegistrationIdentifier, UserIdentifier, UserIdentifierOnBehalfOf, HealthcareProfessionalOrganization, SourceSystemIdentifier, Activity, SessionId";
 	
