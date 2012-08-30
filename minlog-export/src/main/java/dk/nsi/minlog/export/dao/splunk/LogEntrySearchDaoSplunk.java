@@ -53,12 +53,10 @@ public class LogEntrySearchDaoSplunk implements LogEntrySearchDao {
 
 	@Value("${minlog.import.sleep}") 
     public Integer sleep;
-		
+	
 	@Inject
-	Service splunkService;
-
-	
-	
+	SplunkServiceFactory splunkServiceFactory;
+			
 	Map<String, String> resultOptions;  
 	static final String FIELDS = "_indextime, _time, EventDateTime, PersonCivilRegistrationIdentifier, UserIdentifier, UserIdentifierOnBehalfOf, HealthcareProfessionalOrganization, SourceSystemIdentifier, Activity, SessionId";
 	
@@ -74,7 +72,15 @@ public class LogEntrySearchDaoSplunk implements LogEntrySearchDao {
 		
 		logger.debug("Splunk query:" + query);
 		
-		Job job = splunkService.getJobs().create(query);
+		Service service;
+		
+		try {
+			service = splunkServiceFactory.getService();
+		} catch(Exception exception){
+			throw new RuntimeException("Failed to connect to splunk server");
+		}
+				
+		Job job = service.getJobs().create(query);
 		
 		//Wait for splunk query to complete
 		logger.debug("Waiting for splunk to complete job");

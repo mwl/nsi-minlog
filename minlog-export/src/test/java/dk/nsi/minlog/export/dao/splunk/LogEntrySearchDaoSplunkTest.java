@@ -46,7 +46,6 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import com.splunk.Job;
-import com.splunk.Service;
 
 import dk.nsi.minlog.domain.LogEntry;
 import dk.sdsd.nsp.slalog.api.SLALogger;
@@ -55,7 +54,7 @@ import dk.sdsd.nsp.slalog.api.SLALogger;
 public class LogEntrySearchDaoSplunkTest {
 
 	@Mock(answer=Answers.RETURNS_DEEP_STUBS)
-	Service splunkService;
+	SplunkServiceFactory splunkServiceFactory;
 	
 	@Mock(answer=Answers.RETURNS_DEEP_STUBS)
 	SLALogger slaLogger;
@@ -75,7 +74,7 @@ public class LogEntrySearchDaoSplunkTest {
 	public void findLogEntries() throws Exception {
 		logEntrySearchDao.sleep = 20;
 		
-		Job job = splunkService.getJobs().create((String)any());
+		Job job = splunkServiceFactory.getService().getJobs().create((String)any());
 		InputStream stream = ClassLoader.class.getResourceAsStream("/splunk/queryResult.xml");
 		when(job.getResults((Map)any())).thenReturn(stream);
 		when(job.isDone()).thenReturn(false, true);

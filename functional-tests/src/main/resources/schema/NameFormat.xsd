@@ -9,7 +9,7 @@
 		<restriction base="string">
 			<enumeration value="medcom:ynumber"/>
 			<enumeration value="medcom:pnumber"/>
-			<enumeration value="medcom:skscode"/>
+			<enumeration value="medcom:shak"/>
 			<enumeration value="medcom:cvrnumber"/>
 			<enumeration value="medcom:communalnumber"/>
 			<enumeration value="medcom:sor"/>

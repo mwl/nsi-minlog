@@ -51,10 +51,12 @@
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="medcom:ynumber"/>
 			<xs:enumeration value="medcom:pnumber"/>
-			<xs:enumeration value="medcom:skscode"/>
+			<xs:enumeration value="medcom:shak"/>
 			<xs:enumeration value="medcom:cvrnumber"/>
 			<xs:enumeration value="medcom:communalnumber"/>
 			<xs:enumeration value="medcom:sor"/>
+			<xs:enumeration value="medcom:other"/>
+			<xs:enumeration value="medcom:unknown_organization"/>
 		</xs:restriction>
 	</xs:simpleType>
     

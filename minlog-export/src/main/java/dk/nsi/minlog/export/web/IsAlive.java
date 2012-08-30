@@ -35,9 +35,10 @@ import javax.inject.Inject;
 import javax.servlet.jsp.JspWriter;
 import javax.sql.DataSource;
 
+import org.bouncycastle.crypto.RuntimeCryptoException;
 import org.springframework.stereotype.Repository;
 
-import com.splunk.Service;
+import dk.nsi.minlog.export.dao.splunk.SplunkServiceFactory;
 
 
 /**
@@ -53,7 +54,7 @@ public class IsAlive {
 	DataSource dataSource;
 
 	@Inject
-	Service splunkService;
+	SplunkServiceFactory splunkServiceFactory;
 
 	/**
 	 * Checks if we have access to the database by doing a simple query.
@@ -77,7 +78,11 @@ public class IsAlive {
 			}
 
 			// Checking splunk connection (throws exception on error)
-			splunkService.getInfo();
+			try{
+				splunkServiceFactory.getService().getInfo();				
+			} catch(Exception ex){
+				throw new RuntimeException("Failed to connect to splunk");
+			}
 		}
 		finally {
 			try {

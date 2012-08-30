@@ -23,53 +23,20 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package dk.nsi.minlog.export.config;
+package dk.nsi.minlog.export.dao.splunk;
 
-import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
+import com.splunk.Service;
 
-import dk.nsi.minlog.export.dao.splunk.SplunkServiceFactory;
-
-@Configuration
-@ComponentScan({"dk.nsi.minlog.export.dao.splunk"})
-public class SplunkConfig {
-	static final Logger logger = Logger.getLogger(SplunkConfig.class);
-
-	@Value("${minlog.splunk.host}")
-	String host;
-
-	@Value("${minlog.splunk.port}")
-	Integer port;
-	
-	@Value("${minlog.splunk.user}")
-	String user;
-	
-	@Value("${minlog.splunk.password}")
-	String password;
-	
-	@Value("${minlog.splunk.schema}")
-	String schema;
-	
-	@Bean 
-	public Map<String, Object> splunkSettings(){
-		logger.debug("Creating Splunk service with host=" + host + " port=" + port + " schema=" + schema + " user=" + user);
-		Map<String, Object> args = new HashMap<String, Object>();
-		args.put("host", host);
-		args.put("port", port);
-		args.put("schema", schema);
-		args.put("username", user);
-		args.put("password", password);
-		return args; 
+public class SplunkServiceFactory {
+	Map<String, Object> args;
+	public SplunkServiceFactory(Map<String, Object> args){
+		this.args = args;
 	}
 	
-	@Bean
-	public SplunkServiceFactory splunkServiceFactory(){
-		return new SplunkServiceFactory(splunkSettings());
+	public Service getService(){
+		return Service.connect(args);
 	}
+	
 }

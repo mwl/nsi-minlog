@@ -150,14 +150,18 @@ public class MinlogudtraekserviceImpl implements Minlogudtraekservice {
 			return NameFormat.MEDCOM_YNUMBER;
 		} else if (str.equals("PNUMBER")) {
 			return NameFormat.MEDCOM_PNUMBER;
-		} else if (str.equals("SKSCODE")) {
-			return NameFormat.MEDCOM_SKSCODE;
+		} else if (str.equals("SHAK")) {
+			return NameFormat.MEDCOM_SHAK;
 		} else if (str.equals("CVRNUMBER")) {
 			return NameFormat.MEDCOM_CVRNUMBER;
 		} else if (str.equals("COMMUNALNUMBER")) {
 			return NameFormat.MEDCOM_COMMUNALNUMBER;
 		} else if (str.equals("SOR")) {
 			return NameFormat.MEDCOM_SOR;
+		} else if (str.equals("OTHER")) {
+			return NameFormat.MEDCOM_OTHER;
+		} else if (str.equals("UNKNOWN_ORGANIZATION")) {
+			return NameFormat.MEDCOM_UNKNOWN_ORGANIZATION;
 		} else {
 			throw new RuntimeException(str + " is not a valid Nameformat");
 		}

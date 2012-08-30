@@ -39,8 +39,8 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import com.avaje.ebean.EbeanServer;
 import com.avaje.ebean.springsupport.factory.EbeanServerFactoryBean;
-import com.splunk.Service;
 
+import dk.nsi.minlog.export.dao.splunk.SplunkServiceFactory;
 import dk.sdsd.nsp.slalog.api.SLALogger;
 
 /**
@@ -84,9 +84,9 @@ public class ConfigTest {
 			return mock(EbeanServer.class);
 		}
 		
-		@Override
-		public Service splunkService(){
-			return mock(Service.class);
+		@Bean
+		public SplunkServiceFactory splunkServiceFactory(){
+			return mock(SplunkServiceFactory.class);
 		}
 	}
 	

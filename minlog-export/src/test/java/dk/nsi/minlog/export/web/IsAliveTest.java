@@ -40,15 +40,15 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import com.splunk.Service;
+import dk.nsi.minlog.export.dao.splunk.SplunkServiceFactory;
 
 @RunWith(MockitoJUnitRunner.class)
 public class IsAliveTest {
 	@Mock(answer=Answers.RETURNS_DEEP_STUBS)
 	DataSource dataSource;
 	
-	@Mock
-	Service splunkService;
+	@Mock(answer=Answers.RETURNS_DEEP_STUBS)
+	SplunkServiceFactory splunkServiceFactory;
 	
 	@Mock
 	JspWriter out;

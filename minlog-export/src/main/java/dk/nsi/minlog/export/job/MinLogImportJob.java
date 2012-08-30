@@ -102,7 +102,7 @@ public class MinLogImportJob {
 					
 				}
 			} catch (Exception e) {
-				logger.error("Import failed, setting running to false for next iteration", e);
+				logger.error("Import failed, trying again at next iteration", e);
 			}
 
 			running = false;

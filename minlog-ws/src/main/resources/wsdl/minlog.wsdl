@@ -48,10 +48,12 @@
 		<xs:restriction base="xs:string" xmlns:xs="http://www.w3.org/2001/XMLSchema">
 			<xs:enumeration value="medcom:ynumber" xmlns:xs="http://www.w3.org/2001/XMLSchema"/>
 			<xs:enumeration value="medcom:pnumber" xmlns:xs="http://www.w3.org/2001/XMLSchema"/>
-			<xs:enumeration value="medcom:skscode" xmlns:xs="http://www.w3.org/2001/XMLSchema"/>
+			<xs:enumeration value="medcom:shak" xmlns:xs="http://www.w3.org/2001/XMLSchema"/>
 			<xs:enumeration value="medcom:cvrnumber" xmlns:xs="http://www.w3.org/2001/XMLSchema"/>
 			<xs:enumeration value="medcom:communalnumber" xmlns:xs="http://www.w3.org/2001/XMLSchema"/>
 			<xs:enumeration value="medcom:sor" xmlns:xs="http://www.w3.org/2001/XMLSchema"/>
+			<xs:enumeration value="medcom:other" xmlns:xs="http://www.w3.org/2001/XMLSchema"/>
+			<xs:enumeration value="medcom:unknown_organization" xmlns:xs="http://www.w3.org/2001/XMLSchema"/>
 		</xs:restriction>
 	</xs:simpleType>
     
