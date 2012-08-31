@@ -7,7 +7,7 @@
 	</element>
 	<simpleType name="NameFormat">
 		<restriction base="string">
-			<enumeration value="medcom:ynumber"/>
+			<enumeration value="medcom:ydernumber"/>
 			<enumeration value="medcom:pnumber"/>
 			<enumeration value="medcom:shak"/>
 			<enumeration value="medcom:cvrnumber"/>

@@ -46,7 +46,7 @@
     
     <xs:simpleType name="NameFormat" xmlns:xs="http://www.w3.org/2001/XMLSchema">
 		<xs:restriction base="xs:string" xmlns:xs="http://www.w3.org/2001/XMLSchema">
-			<xs:enumeration value="medcom:ynumber" xmlns:xs="http://www.w3.org/2001/XMLSchema"/>
+			<xs:enumeration value="medcom:ydernumber" xmlns:xs="http://www.w3.org/2001/XMLSchema"/>
 			<xs:enumeration value="medcom:pnumber" xmlns:xs="http://www.w3.org/2001/XMLSchema"/>
 			<xs:enumeration value="medcom:shak" xmlns:xs="http://www.w3.org/2001/XMLSchema"/>
 			<xs:enumeration value="medcom:cvrnumber" xmlns:xs="http://www.w3.org/2001/XMLSchema"/>
