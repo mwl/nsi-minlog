@@ -68,7 +68,7 @@ public class MinlogudtraekserviceImplTest {
 	private XMLGregorianCalendar fromXml = new XMLGregorianCalendarImpl(from.toGregorianCalendar()); 
 	private XMLGregorianCalendar toXml = new XMLGregorianCalendarImpl(to.toGregorianCalendar()); 
 
-	private final static String[] nameFormat = new String[]{"YNUMBER", "PNUMBER", "SHAK", "CVRNUMBER", "COMMUNALNUMBER", "SOR", "OTHER", "UNKNOWN_ORGANIZATION"};
+	private final static String[] nameFormat = new String[]{"YDERNUMMER", "PNUMBER", "SHAK", "CVRNUMBER", "COMMUNALNUMBER", "SOR", "OTHER", "UNKNOWN_ORGANIZATION"};
 
 	/**
 	 * Create a mock dao with data.

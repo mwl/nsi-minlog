@@ -49,7 +49,7 @@
     
     <xs:simpleType name="NameFormat">
 		<xs:restriction base="xs:string">
-			<xs:enumeration value="medcom:ydernumber"/>
+			<xs:enumeration value="medcom:ydernummer"/>
 			<xs:enumeration value="medcom:pnumber"/>
 			<xs:enumeration value="medcom:shak"/>
 			<xs:enumeration value="medcom:cvrnumber"/>

@@ -146,8 +146,8 @@ public class MinlogudtraekserviceImpl implements Minlogudtraekservice {
 	 * @return the nameformat as a enum.
 	 */
 	private static NameFormat nfFromString(String str) {
-		if (str.equals("YDERNUMBER")) {
-			return NameFormat.MEDCOM_YDERNUMBER;
+		if (str.equals("YDERNUMMER")) {
+			return NameFormat.MEDCOM_YDERNUMMER;
 		} else if (str.equals("PNUMBER")) {
 			return NameFormat.MEDCOM_PNUMBER;
 		} else if (str.equals("SHAK")) {
