@@ -26,6 +26,7 @@
 package dk.nsi.minlog.ws.config;
 
 import java.util.HashMap;
+import java.util.Properties;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -76,7 +77,11 @@ public class WSConfig {
         final DefaultWsdl11Definition bean = new DefaultWsdl11Definition();
         bean.setSchema(schema1XsdSchema());
         bean.setPortTypeName("Minlog");
-        bean.setLocationUri("http://localhost:8080/minlog-ws/");
+        bean.setLocationUri("http://localhost:8080/minlog/");
+        Properties soapActions = new Properties();
+        soapActions.put("ListLogStatements","http://nsi.dk/minlog/2012/05/24/ListLogStatements");
+        bean.setSoapActions(soapActions);
+        
         return bean;
     }
 
