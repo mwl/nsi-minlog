@@ -18,6 +18,13 @@
 		<connection>scm:git:https://github.com/trifork/nsi-minlog</connection>
 		<developerConnection>scm:git:https://github.com/trifork/nsi-minlog</developerConnection>
 	</scm>
+    <distributionManagement>
+        <repository>
+            <id>Trifork-Nexus-Release-Repository</id>
+            <name>Trifork Nexus Release Repository</name>
+            <url>https://nexus.trifork.com/content/repositories/releases/</url>
+        </repository>
+    </distributionManagement>
 
 	<properties>
 		<org.springframework.version>3.1.1.RELEASE</org.springframework.version>
@@ -53,11 +60,6 @@
 				<artifactId>performance</artifactId>
 				<version>${project.version}</version>
 				<type>pom</type>
-			</dependency>
-			<dependency>
-				<groupId>com.trifork.dgws</groupId>
-				<artifactId>dgws-spring</artifactId>
-				<version>1.0.3</version>
 			</dependency>
 			<dependency>
 				<groupId>org.springframework</groupId>
