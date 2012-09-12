@@ -10,9 +10,7 @@
 		<module>minlog-ws</module>
 		<module>minlog-export</module>		
 		<module>functional-tests</module>
-		<module>test-deps</module>
 		<module>performance</module>
-		<module>deps</module>
 		<module>shared</module>
 	</modules>
 	<scm>
@@ -46,18 +44,6 @@
 			</dependency>
 			<dependency>
 				<groupId>dk.minlog</groupId>
-				<artifactId>test-deps</artifactId>
-				<version>${project.version} </version>
-				<type>pom</type>
-			</dependency>
-			<dependency>
-				<groupId>dk.minlog</groupId>
-				<artifactId>deps</artifactId>
-				<version>${project.version} </version>
-				<type>pom</type>
-			</dependency>
-			<dependency>
-				<groupId>dk.minlog</groupId>
 				<artifactId>shared</artifactId>
 				<version>${project.version} </version>
 				<type>jar</type>
@@ -68,7 +54,11 @@
 				<version>${project.version}</version>
 				<type>pom</type>
 			</dependency>
-
+			<dependency>
+				<groupId>com.trifork.dgws</groupId>
+				<artifactId>dgws-spring</artifactId>
+				<version>1.0.3</version>
+			</dependency>
 			<dependency>
 				<groupId>org.springframework</groupId>
 				<artifactId>spring-webmvc</artifactId>
@@ -105,6 +95,11 @@
 				<version>${org.springframework.version}</version>
 			</dependency>
 
+			<dependency>
+				<groupId>com.trifork.dgws</groupId>
+				<artifactId>dgws-spring</artifactId>
+				<version>1.0.3</version>
+			</dependency>
 			<dependency>
 				<groupId>javax.activation</groupId>
 				<artifactId>activation</artifactId>
@@ -171,8 +166,8 @@
 			</dependency>
 			<dependency>
 				<groupId>javax.servlet</groupId>
-				<artifactId>jsp-api</artifactId>
-				<version>2.0</version>
+				<artifactId>servlet-api</artifactId>
+				<version>2.4</version>
 				<scope>provided</scope>
 			</dependency>
 			<!-- | The Jboss's libraries (which we cannot replace) | do not work with 
@@ -225,6 +220,11 @@
 				<version>2.2</version>
 				<scope>provided</scope>
 			</dependency>
+			<dependency>
+				<groupId>org.avaje</groupId>
+				<artifactId>ebean-spring</artifactId>
+				<version>2.7.5</version>
+			</dependency>
 
 			<dependency>
 				<groupId>org.springframework</groupId>
@@ -271,7 +271,11 @@
                     <aggregate>true</aggregate>
 				</configuration>
 			</plugin>
-
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<version>2.5.1</version>
+			</plugin>
 		</plugins>
 	</build>
 

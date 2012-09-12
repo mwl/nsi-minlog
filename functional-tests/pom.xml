@@ -5,9 +5,8 @@
 		<artifactId>minlog</artifactId>
 		<groupId>dk.minlog</groupId>
 		<version>1.0-SNAPSHOT</version>
-		<relativePath>..</relativePath>
 	</parent>
-	<artifactId>functional-tests</artifactId>
+	<artifactId>minlog-functional-tests</artifactId>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -18,17 +17,6 @@
 			<groupId>dk.minlog</groupId>
 			<artifactId>minlog-ws</artifactId>
 			<classifier>classes</classifier>
-		</dependency>
-		<dependency>
-			<groupId>dk.minlog</groupId>
-			<artifactId>deps</artifactId>
-			<type>pom</type>
-		</dependency>		
-		<dependency>
-			<groupId>dk.minlog</groupId>
-			<artifactId>test-deps</artifactId>
-			<type>pom</type>
-			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.ws</groupId>
@@ -55,8 +43,21 @@
 		</dependency>
 		<dependency>
 			<groupId>javax.servlet</groupId>
-			<artifactId>jsp-api</artifactId>
+			<artifactId>servlet-api</artifactId>
 			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-all</artifactId>
+			<version>1.9.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
 		</dependency>
 	</dependencies>
 
