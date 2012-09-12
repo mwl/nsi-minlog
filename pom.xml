@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>dk.minlog</groupId>
 	<artifactId>minlog</artifactId>
-	<version>1.0-SNAPSHOT</version>
+	<version>1.1</version>
 	<packaging>pom</packaging>
 	<modules>
 		<module>minlog-ws</module>
@@ -35,13 +34,13 @@
 			<dependency>
 				<groupId>dk.minlog</groupId>
 				<artifactId>minlog-ws</artifactId>
-				<version>1.0-SNAPSHOT</version>
+				<version>1.1</version>
 				<classifier>classes</classifier>
 			</dependency>
 			<dependency>
 				<groupId>dk.minlog</groupId>
 				<artifactId>minlog-export</artifactId>
-				<version>1.0-SNAPSHOT</version>
+				<version>1.1</version>
 				<classifier>classes</classifier>
 			</dependency>
 			<dependency>
