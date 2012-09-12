@@ -71,7 +71,7 @@
     <wsdl:part element="tns:ListLogStatementsRequest" name="ListLogStatementsRequest"/>
   </wsdl:message>
   <wsdl:portType name="Minlogudtraekservice">
-    <wsdl:operation name="ListLogStatements">
+    <wsdl:operation name="ListLogStatements" soapAction="http://nsi.dk/minlog/2012/05/24/ListLogStatements">
       <wsdl:input message="tns:ListLogStatementsRequest" name="ListLogStatementsRequest"/>
       <wsdl:output message="tns:ListLogStatementsResponse" name="ListLogStatementsResponse"/>
     </wsdl:operation>
