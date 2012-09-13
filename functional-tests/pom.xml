@@ -3,7 +3,7 @@
 	<parent>
 		<artifactId>minlog</artifactId>
 		<groupId>dk.minlog</groupId>
-		<version>1.2-SNAPSHOT</version>
+		<version>1.1.1</version>
 	</parent>
 	<artifactId>minlog-functional-tests</artifactId>
 
