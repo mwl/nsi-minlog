@@ -45,19 +45,19 @@
 			</dependency>
 			<dependency>
 				<groupId>dk.minlog</groupId>
-				<artifactId>functional-test</artifactId>
-				<version>1.0-SNAPSHOT</version>
+				<artifactId>minlog-functional-test</artifactId>
+				<version>1.2-SNAPSHOT</version>
 			</dependency>
 			<dependency>
 				<groupId>dk.minlog</groupId>
-				<artifactId>shared</artifactId>
-				<version>1.0-SNAPSHOT</version>
+				<artifactId>minlog-shared</artifactId>
+				<version>1.2-SNAPSHOT</version>
 				<type>jar</type>
 			</dependency>
 			<dependency>
 				<groupId>dk.minlog</groupId>
-				<artifactId>performance</artifactId>
-				<version>1.0-SNAPSHOT</version>
+				<artifactId>minlog-performance</artifactId>
+				<version>1.2-SNAPSHOT</version>
 				<type>pom</type>
 			</dependency>
 			<dependency>

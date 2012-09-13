@@ -15,7 +15,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>dk.minlog</groupId>
-			<artifactId>shared</artifactId>
+			<artifactId>minlog-shared</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>javax.inject</groupId>
