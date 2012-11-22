@@ -73,6 +73,7 @@ public class LogEntrySearchDaoSplunkTest {
 	@SuppressWarnings("rawtypes")
 	public void findLogEntries() throws Exception {
 		logEntrySearchDao.sleep = 20;
+		logEntrySearchDao.query = "This is the query %d %d %s";
 		
 		Job job = splunkServiceFactory.getService().getJobs().create((String)any());
 		InputStream stream = ClassLoader.class.getResourceAsStream("/splunk/queryResult.xml");

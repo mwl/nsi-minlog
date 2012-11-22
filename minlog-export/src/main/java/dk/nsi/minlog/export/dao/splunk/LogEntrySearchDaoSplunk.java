@@ -57,6 +57,9 @@ public class LogEntrySearchDaoSplunk implements LogEntrySearchDao {
 	@Inject
 	SplunkServiceFactory splunkServiceFactory;
 			
+	@Value("${minlog.splunk.query}")
+	String query;
+
 	Map<String, String> resultOptions;  
 	static final String FIELDS = "_indextime, _time, EventDateTime, PersonCivilRegistrationIdentifier, UserIdentifier, UserIdentifierOnBehalfOf, HealthcareProfessionalOrganization, SourceSystemIdentifier, Activity, SessionId";
 	
@@ -68,9 +71,10 @@ public class LogEntrySearchDaoSplunk implements LogEntrySearchDao {
 	
 	@Override
 	public List<LogEntry> findLogEntries(DateTime from, DateTime to)  {
-		String query = "search index=main sourcetype=minlog  (_indextime > "+ (from.getMillis()/1000) + " AND _indextime < " + (to.getMillis()/1000) + ") | fields " + FIELDS + " | sort by _indextime asc";
+		// Format: "search index=main sourcetype=minlog  (_indextime > %d AND _indextime < %d) | fields %s | sort by _indextime asc";
+		String finalQuery = String.format(query, (from.getMillis()/1000), (to.getMillis()/1000), FIELDS);
 		
-		logger.debug("Splunk query:" + query);
+		logger.debug("Splunk query:" + finalQuery);
 		
 		Service service;
 		
@@ -80,7 +84,7 @@ public class LogEntrySearchDaoSplunk implements LogEntrySearchDao {
 			throw new RuntimeException("Failed to connect to splunk server");
 		}
 				
-		Job job = service.getJobs().create(query);
+		Job job = service.getJobs().create(finalQuery);
 		
 		//Wait for splunk query to complete
 		logger.debug("Waiting for splunk to complete job");
