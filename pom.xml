@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>dk.minlog</groupId>
 	<artifactId>minlog</artifactId>
-	<version>1.2-SNAPSHOT</version>
+	<version>1.2</version>
 	<packaging>pom</packaging>
 	<modules>
 		<module>minlog-ws</module>
@@ -34,13 +34,13 @@
 			<dependency>
 				<groupId>dk.minlog</groupId>
 				<artifactId>minlog-ws</artifactId>
-				<version>1.2-SNAPSHOT</version>
+				<version>1.2</version>
 				<classifier>classes</classifier>
 			</dependency>
 			<dependency>
 				<groupId>dk.minlog</groupId>
 				<artifactId>minlog-export</artifactId>
-				<version>1.2-SNAPSHOT</version>
+				<version>1.2</version>
 				<classifier>classes</classifier>
 			</dependency>
 			<dependency>
@@ -51,13 +51,13 @@
 			<dependency>
 				<groupId>dk.minlog</groupId>
 				<artifactId>minlog-shared</artifactId>
-				<version>1.2-SNAPSHOT</version>
+				<version>1.2</version>
 				<type>jar</type>
 			</dependency>
 			<dependency>
 				<groupId>dk.minlog</groupId>
 				<artifactId>minlog-performance</artifactId>
-				<version>1.2-SNAPSHOT</version>
+				<version>1.2</version>
 				<type>pom</type>
 			</dependency>
 			<dependency>
