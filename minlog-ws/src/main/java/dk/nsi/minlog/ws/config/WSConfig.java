@@ -28,12 +28,11 @@ package dk.nsi.minlog.ws.config;
 import java.util.HashMap;
 import java.util.Properties;
 
-import org.springframework.beans.factory.annotation.Value;
+import com.trifork.dgws.annotations.EnableDgwsProtection;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
-import org.springframework.context.annotation.ImportResource;
 import org.springframework.context.annotation.Primary;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
@@ -66,12 +65,9 @@ import com.trifork.dgws.sosi.SOSISecurityInterceptor;
  */
 @Configuration
 @ComponentScan({"dk.nsi.minlog.ws.ws"})
-@ImportResource({"classpath:/dk/trifork/dgws/dgws-protection.xml"})
+@EnableDgwsProtection(test = "${sosi.test}", skipSOSI = "${sosi.canSkipSosi}")
 @EnableAspectJAutoProxy(proxyTargetClass = true)
 public class WSConfig {
-    @Value("${sosi.production}") Boolean sosiProduction;
-    @Value("${sosi.canSkipSosi}") Boolean canSkipSosi;
-	
     @Bean
     public WsdlDefinition serviceDefinition() {
         final DefaultWsdl11Definition bean = new DefaultWsdl11Definition();
@@ -149,27 +145,7 @@ public class WSConfig {
         interceptor.setValidateResponse(false);
         return interceptor;
     }
-    
-    
-    @Bean
-    public EndpointInterceptor SOSISecurityInterceptor(){
-    	SOSISecurityInterceptor interceptor = new SOSISecurityInterceptor();
-    	if(sosiProduction != null && sosiProduction.booleanValue()){
-    		interceptor.setProduction(true);
-    	} else {
-    		interceptor.setProduction(false);
-    	}
-    	
-    	if(canSkipSosi != null && canSkipSosi.booleanValue()){
-    		interceptor.setCanSkipSosi(true);
-    	} else {
-    		interceptor.setCanSkipSosi(false);
-    	}
 
-    	
-    	return interceptor;
-    }
-    
     @Bean(name = {"serviceMarshaller", "serviceUnmarshaller"}) @Primary
     public Jaxb2Marshaller serviceMarshaller() {
         final Jaxb2Marshaller bean = new Jaxb2Marshaller();

@@ -29,6 +29,7 @@ import static org.mockito.Mockito.*;
 
 import javax.sql.DataSource;
 
+import com.trifork.dgws.annotations.EnableDgwsProtection;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -41,10 +42,6 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import com.avaje.ebean.EbeanServer;
 import com.avaje.ebean.springsupport.factory.EbeanServerFactoryBean;
-
-import dk.nsi.minlog.ws.config.ApplicationRootConfig;
-import dk.nsi.minlog.ws.config.DatabaseConfig;
-import dk.nsi.minlog.ws.config.WSConfig;
 
 /**
  * Simple test to see if spring is correctly setup, and all dependecies are met.
@@ -87,6 +84,7 @@ public class ConfigTest {
 	}
 
 	@Configuration
+    @EnableDgwsProtection(test = "${sosi.test}", skipSOSI = "${sosi.canSkipSosi}")
 	@EnableAspectJAutoProxy(proxyTargetClass = true)
 	public static class WSConfigTest extends WSConfig{
 		@Bean
